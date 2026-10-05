@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prescription Report | Eden Clinic and Pharmacy</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: auto;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* HEADER */
+        .header {
+            background-color: #0077b6;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header h2 {
+            margin: 8px 0;
+            font-size: 21px;
+        }
+
+        .header p {
+            margin: 5px 0;
+            color: #d9f3ff;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 30px;
+        }
+
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e3f2fd;
+            border-left: 5px solid #0077b6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .report-title {
+            color: #005f73;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .report-date {
+            color: #555;
+        }
+
+        /* TABLE */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #023e8a;
+            color: white;
+            padding: 13px 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f5faff;
+        }
+
+        tbody tr:hover {
+            background-color: #dff6ff;
+        }
+
+        /* TABLE TEXT COLORS */
+        .patient-number {
+            color: #0077b6;
+            font-weight: bold;
+        }
+
+        .patient-name {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .doctor-name {
+            color: #6f42c1;
+            font-weight: bold;
+        }
+
+        .medicine-name {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .dosage {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .frequency {
+            color: #0d6efd;
+            font-weight: bold;
+        }
+
+        .duration {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .quantity {
+            color: #6f42c1;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .instructions {
+            color: #555;
+        }
+
+        .prescription-date {
+            color: #198754;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* STATUS */
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pending {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+
+        .dispensed {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            font-style: italic;
+        }
+
+        /* BUTTONS */
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 20px;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+        .back-button:hover {
+            background-color: #495057;
+        }
+
+        .print-button {
+            background-color: #28a745;
+        }
+
+        .print-button:hover {
+            background-color: #218838;
+        }
+
+        /* FOOTER */
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+        }
+
+        .footer span {
+            color: #80bdff;
+            font-weight: bold;
+        }
+
+        /* RESPONSIVE */
+        @media screen and (max-width: 900px) {
+
+            .content {
+                padding: 15px;
+            }
+
+            .report-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header h2 {
+                font-size: 18px;
+            }
+        }
+
+        /* PRINT */
+        @media print {
+
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .buttons {
+                display: none;
+            }
+
+            .footer {
+                display: none;
+            }
+
+            .header {
+                background-color: #0077b6 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            th {
+                background-color: #023e8a !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <h1>Eden Clinic and Pharmacy</h1>
+
+        <h2>Prescription Management Report</h2>
+
+        <p>Clinic Management System</p>
+
+    </div>
+
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <div class="report-info">
+
+            <div class="report-title">
+                Prescription Records Report
+            </div>
+
+            <div class="report-date">
+
+                <strong>Date:</strong>
+
+                {% now "d/m/Y" %}
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESCRIPTION TABLE -->
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>No.</th>
+
+                        <th>Patient Number</th>
+
+                        <th>Patient Name</th>
+
+                        <th>Doctor</th>
+
+                        <th>Prescription Date</th>
+
+                        <th>Medicine</th>
+
+                        <th>Dosage</th>
+
+                        <th>Frequency</th>
+
+                        <th>Duration</th>
+
+                        <th>Quantity</th>
+
+                        <th>Instructions</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for prescription in prescriptions %}
+
+                    <tr>
+
+                        <!-- NUMBER -->
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+
+                        <!-- PATIENT NUMBER -->
+                        <td class="patient-number">
+
+                            {{ prescription.patient.patient_number }}
+
+                        </td>
+
+
+                        <!-- PATIENT NAME -->
+                        <td class="patient-name">
+
+                            {{ prescription.patient.first_name }}
+
+                            {{ prescription.patient.last_name }}
+
+                        </td>
+
+
+                        <!-- DOCTOR -->
+                        <td class="doctor-name">
+
+                            {% if prescription.doctor %}
+
+                                {% if prescription.doctor.get_full_name %}
+
+                                    {{ prescription.doctor.get_full_name }}
+
+                                {% else %}
+
+                                    {{ prescription.doctor.username }}
+
+                                {% endif %}
+
+                            {% else %}
+
+                                Not Assigned
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- PRESCRIPTION DATE -->
+                        <td class="prescription-date">
+
+                            {{ prescription.prescription_date|date:"d/m/Y" }}
+
+                        </td>
+
+
+                        <!-- MEDICINE -->
+                        <td class="medicine-name">
+
+                            {{ prescription.medicine_name }}
+
+                        </td>
+
+
+                        <!-- DOSAGE -->
+                        <td class="dosage">
+
+                            {{ prescription.dosage }}
+
+                        </td>
+
+
+                        <!-- FREQUENCY -->
+                        <td class="frequency">
+
+                            {{ prescription.frequency }}
+
+                        </td>
+
+
+                        <!-- DURATION -->
+                        <td class="duration">
+
+                            {{ prescription.duration }}
+
+                        </td>
+
+
+                        <!-- QUANTITY -->
+                        <td class="quantity">
+
+                            {{ prescription.quantity }}
+
+                        </td>
+
+
+                        <!-- INSTRUCTIONS -->
+                        <td class="instructions">
+
+                            {% if prescription.instructions %}
+
+                                {{ prescription.instructions }}
+
+                            {% else %}
+
+                                No instructions
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+                        <td>
+
+                            {% if prescription.status == "Pending" %}
+
+                                <span class="status pending">
+                                    Pending
+                                </span>
+
+                            {% elif prescription.status == "Dispensed" %}
+
+                                <span class="status dispensed">
+                                    Dispensed
+                                </span>
+
+                            {% elif prescription.status == "Cancelled" %}
+
+                                <span class="status cancelled">
+                                    Cancelled
+                                </span>
+
+                            {% else %}
+
+                                <span class="status">
+                                    {{ prescription.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="12" class="no-data">
+
+                            No prescription records found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div class="buttons">
+
+            <a
+                href="/patients/"
+                class="button back-button"
+            >
+                ← Back to Patients
+            </a>
+
+
+            <button
+                type="button"
+                onclick="window.print()"
+                class="button print-button"
+            >
+                🖨 Print Report
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="footer">
+
+        Eden Clinic and Pharmacy |
+
+        <span>Clinic Management System</span>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointment Calendar | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .top-actions {
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 16px;
+            margin-right: 8px;
+            text-decoration: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #dcdcdc;
+            border: 1px solid #dcdcdc;
+        }
+
+        .day-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .day {
+            background-color: white;
+            min-height: 140px;
+            padding: 10px;
+        }
+
+        .day h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .appointment {
+            background-color: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .appointment strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .scheduled {
+            color: #2980b9;
+        }
+
+        .confirmed {
+            color: #27ae60;
+        }
+
+        .completed {
+            color: #16a085;
+        }
+
+        .cancelled {
+            color: #c0392b;
+        }
+
+        .rescheduled {
+            color: #8e44ad;
+        }
+
+        .empty {
+            color: #999;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .calendar {
+                grid-template-columns: 1fr;
+            }
+
+            .day-header {
+                display: none;
+            }
+
+            .day {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Appointment Calendar</h1>
+
+    <p class="subtitle">
+        Clinic Management System — Appointment Management
+    </p>
+
+    <div class="top-actions">
+
+        <a href="{% url 'appointment_list' %}" class="button">
+            Appointment List
+        </a>
+
+        <a href="{% url 'patient_list' %}" class="button">
+            Patient List
+        </a>
+
+    </div>
+
+    <div class="calendar">
+
+        <div class="day-header">Monday</div>
+        <div class="day-header">Tuesday</div>
+        <div class="day-header">Wednesday</div>
+        <div class="day-header">Thursday</div>
+        <div class="day-header">Friday</div>
+        <div class="day-header">Saturday</div>
+        <div class="day-header">Sunday</div>
+
+        {% regroup appointments by appointment_date as appointment_days %}
+
+        {% for day in appointment_days %}
+
+            <div class="day">
+
+                <h3>
+                    {{ day.grouper|date:"D, d M Y" }}
+                </h3>
+
+                {% for appointment in day.list %}
+
+                    <div class="appointment">
+
+                        <strong>
+                            {{ appointment.appointment_time|time:"H:i" }}
+                        </strong>
+
+                        <div>
+                            Patient:
+                            {{ appointment.patient.first_name }}
+                            {{ appointment.patient.last_name }}
+                        </div>
+
+                        <div>
+                            Doctor:
+                            {% if appointment.doctor %}
+                                {{ appointment.doctor.get_full_name|default:appointment.doctor.username }}
+                            {% else %}
+                                Not assigned
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            Reason:
+                            {{ appointment.reason|default:"Not specified" }}
+                        </div>
+
+                        <div class="status
+                            {% if appointment.status == 'Scheduled' %}
+                                scheduled
+                            {% elif appointment.status == 'Confirmed' %}
+                                confirmed
+                            {% elif appointment.status == 'Completed' %}
+                                completed
+                            {% elif appointment.status == 'Cancelled' %}
+                                cancelled
+                            {% elif appointment.status == 'Rescheduled' %}
+                                rescheduled
+                            {% endif %}
+                        ">
+                            Status: {{ appointment.status }}
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <p class="empty">
+                        No appointments.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        {% empty %}
+
+            <div class="day">
+                <p class="empty">
+                    No appointments available.
+                </p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

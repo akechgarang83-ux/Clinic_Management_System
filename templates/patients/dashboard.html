@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Clinic Management System Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #0077b6;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .header p {
+            margin-top: 8px;
+            font-size: 16px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .welcome {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        .welcome h2 {
+            color: #0077b6;
+            margin-top: 0;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .module-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .module-card .icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .module-card h3 {
+            color: #0077b6;
+            margin: 10px 0;
+        }
+
+        .module-card p {
+            color: #555;
+            min-height: 45px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #0077b6;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background-color: #005f8f;
+        }
+
+        .logout {
+            background-color: #dc3545;
+        }
+
+        .logout:hover {
+            background-color: #b02a37;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>
+            Clinic Management System
+        </h1>
+
+        <p>
+            Eden Clinic and Pharmacy
+        </p>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="welcome">
+
+            <h2>
+                Welcome to the Clinic Management System
+            </h2>
+
+            {% if request.user.is_authenticated %}
+
+                <p>
+                    Welcome,
+                    <strong>
+                        {{ request.user.get_full_name|default:request.user.username }}
+                    </strong>
+                </p>
+
+            {% else %}
+
+                <p>
+                    Please log in to access the clinic modules.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="module-grid">
+
+
+            <!-- Patient Management -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    👥
+                </div>
+
+                <h3>
+                    Patient Management
+                </h3>
+
+                <p>
+                    Register, search, edit and manage
+                    patient information and medical records.
+                </p>
+
+                <a
+                    href="/patients/"
+                    class="button"
+                >
+                    Open Patients
+                </a>
+
+            </div>
+
+
+            <!-- Appointment Management -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    📅
+                </div>
+
+                <h3>
+                    Appointment Management
+                </h3>
+
+                <p>
+                    Manage appointments, schedules,
+                    doctor availability and queues.
+                </p>
+
+                <a
+                    href="/patients/appointments/"
+                    class="button"
+                >
+                    Open Appointments
+                </a>
+
+            </div>
+
+
+            <!-- Consultation -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    🩺
+                </div>
+
+                <h3>
+                    Consultation & Diagnosis
+                </h3>
+
+                <p>
+                    Record consultations, diagnoses,
+                    medical history and treatment information.
+                </p>
+
+                <a
+                    href="/patients/"
+                    class="button"
+                >
+                    Open Consultation
+                </a>
+
+            </div>
+
+
+            <!-- Pharmacy -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    💊
+                </div>
+
+                <h3>
+                    Pharmacy & Prescription
+                </h3>
+
+                <p>
+                    Manage medicines, prescriptions,
+                    inventory, dispensing and stock.
+                </p>
+
+                <a
+                    href="/patients/medicines/"
+                    class="button"
+                >
+                    Open Pharmacy
+                </a>
+
+            </div>
+
+
+            <!-- Billing -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    💰
+                </div>
+
+                <h3>
+                    Billing & Payment
+                </h3>
+
+                <p>
+                    Manage invoices, consultation fees,
+                    payments and receipts.
+                </p>
+<a
+    href="/patients/invoices/"
+    class="button"
+>
+    Open Billing
+</a>
+
+
+            </div>
+
+
+            <!-- Laboratory -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    🧪
+                </div>
+
+                <h3>
+                    Laboratory Management
+                </h3>
+
+                <p>
+                    Manage laboratory requests,
+                    samples, processing and results.
+                </p>
+
+<a
+    href="/patients/laboratory/test-requests/"
+    class="button"
+>
+    Open Laboratory
+</a>
+
+
+            </div>
+
+
+            <!-- Reports -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    📊
+                </div>
+
+                <h3>
+                    Reports
+                </h3>
+
+                <p>
+                    View patient, appointment,
+                    pharmacy, billing and laboratory reports.
+                </p>
+
+                <a
+                    href="/patients/reports/"
+                    class="button"
+                >
+                    Open Reports
+                </a>
+
+            </div>
+
+
+            <!-- Administration -->
+
+            <div class="module-card">
+
+                <div class="icon">
+                    ⚙️
+                </div>
+
+                <h3>
+                    Administration
+                </h3>
+
+                <p>
+                    Manage users, roles, clinic configuration
+                    and system administration.
+                </p>
+
+                <a
+                    href="/patients/administration/"
+                    class="button"
+                >
+                    Administration
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div style="text-align: center; margin-top: 30px;">
+
+            <a
+                href="{% url 'logout' %}"
+                class="button logout"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+
+        Clinic Management System &copy; 2026
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Consultation Fee | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+        }
+
+        .header p {
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #2c3e50;
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .help-text {
+            display: block;
+            margin-top: 6px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .save-button {
+            background-color: #27ae60;
+        }
+
+        .save-button:hover {
+            background-color: #219150;
+        }
+
+        .cancel-button {
+            background-color: #95a5a6;
+        }
+
+        .cancel-button:hover {
+            background-color: #7f8c8d;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Add Consultation Fee</h1>
+
+        <p>
+            Record a consultation fee for a patient.
+        </p>
+
+    </div>
+
+
+    <div class="form-container">
+
+        {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="patient">
+
+                    Patient
+                    <span class="required">*</span>
+
+                </label>
+
+                <select
+                    name="patient"
+                    id="patient"
+                    required
+                >
+
+                    <option value="">
+                        Select Patient
+                    </option>
+
+                    {% for patient in patients %}
+
+                    <option value="{{ patient.id }}">
+
+                        {{ patient.patient_number }}
+                        -
+                        {{ patient.first_name }}
+                        {{ patient.last_name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="consultation">
+                    Consultation
+                </label>
+
+                <select
+                    name="consultation"
+                    id="consultation"
+                >
+
+                    <option value="">
+                        Select Consultation (Optional)
+                    </option>
+
+                    {% for consultation in consultations %}
+
+                    <option value="{{ consultation.id }}">
+
+                        {{ consultation.patient.first_name }}
+                        {{ consultation.patient.last_name }}
+                        -
+                        {{ consultation.consultation_date }}
+                        -
+                        {{ consultation.chief_complaint }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <span class="help-text">
+                    You may link this fee to an existing consultation.
+                </span>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="fee_amount">
+
+                    Fee Amount
+                    <span class="required">*</span>
+
+                </label>
+
+                <input
+                    type="number"
+                    name="fee_amount"
+                    id="fee_amount"
+                    min="0"
+                    step="0.01"
+                    value="0"
+                    placeholder="Enter consultation fee"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    id="description"
+                    placeholder="Enter any additional information about this consultation fee..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="button save-button"
+                >
+                    Save Consultation Fee
+                </button>
+
+
+                <a
+                    href="{% url 'consultation_fee_list' %}"
+                    class="button cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

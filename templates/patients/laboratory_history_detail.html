@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Laboratory History Detail | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .header,
+        .section {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #222;
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #545b62;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            color: #222;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .verified {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .processing {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .sample {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .requested {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .cancelled,
+        .rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .timeline {
+            border-left: 3px solid #007bff;
+            padding-left: 20px;
+        }
+
+        .timeline-item {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            background-color: #007bff;
+            border-radius: 50%;
+            position: absolute;
+            left: -28px;
+            top: 5px;
+        }
+
+        .timeline-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .timeline-content {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .notes {
+            white-space: pre-line;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: 95%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="{% url 'laboratory_history' %}" class="back-button">
+        ← Back to Laboratory History
+    </a>
+
+    <div class="header">
+
+        <h1>Laboratory History</h1>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="label">Patient</span>
+                <span class="value">
+                    {{ test_request.patient.first_name }}
+                    {{ test_request.patient.last_name }}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Patient Number</span>
+                <span class="value">
+                    {{ test_request.patient.patient_number }}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Test Category</span>
+                <span class="value">
+                    {% if test_request.test_category %}
+                        {{ test_request.test_category.name }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Test Name</span>
+                <span class="value">
+                    {{ test_request.test_name }}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Request Date</span>
+                <span class="value">
+                    {{ test_request.request_date|date:"Y-m-d H:i" }}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Current Status</span>
+                <span class="value">
+
+                    {% if test_request.status == 'Verified' %}
+                        <span class="status verified">
+                            {{ test_request.status }}
+                        </span>
+                    {% elif test_request.status == 'Completed' %}
+                        <span class="status completed">
+                            {{ test_request.status }}
+                        </span>
+                    {% elif test_request.status == 'Processing' %}
+                        <span class="status processing">
+                            {{ test_request.status }}
+                        </span>
+                    {% elif test_request.status == 'Sample Collected' %}
+                        <span class="status sample">
+                            {{ test_request.status }}
+                        </span>
+                    {% elif test_request.status == 'Requested' %}
+                        <span class="status requested">
+                            {{ test_request.status }}
+                        </span>
+                    {% elif test_request.status == 'Cancelled' %}
+                        <span class="status cancelled">
+                            {{ test_request.status }}
+                        </span>
+                    {% else %}
+                        <span class="status">
+                            {{ test_request.status }}
+                        </span>
+                    {% endif %}
+
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <h2>Laboratory Workflow History</h2>
+
+        <div class="timeline">
+
+            <div class="timeline-item">
+
+                <div class="timeline-title">
+                    1. Test Request
+                </div>
+
+                <div class="timeline-content">
+
+                    <p>
+                        <strong>Test:</strong>
+                        {{ test_request.test_name }}
+                    </p>
+
+                    <p>
+                        <strong>Requested:</strong>
+                        {{ test_request.request_date|date:"Y-m-d H:i" }}
+                    </p>
+
+                    <p>
+                        <strong>Requested By:</strong>
+
+                        {% if test_request.requested_by %}
+                            {{ test_request.requested_by.get_full_name|default:test_request.requested_by.username }}
+                        {% else %}
+                            Not recorded
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Clinical Notes:</strong>
+                    </p>
+
+                    <p class="notes">
+                        {% if test_request.clinical_notes %}
+                            {{ test_request.clinical_notes }}
+                        {% else %}
+                            No clinical notes recorded.
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% if test_request.sample_collection %}
+
+            <div class="timeline-item">
+
+                <div class="timeline-title">
+                    2. Sample Collection
+                </div>
+
+                <div class="timeline-content">
+
+                    <p>
+                        <strong>Sample Type:</strong>
+                        {{ test_request.sample_collection.sample_type }}
+                    </p>
+
+                    <p>
+                        <strong>Collection Date:</strong>
+                        {{ test_request.sample_collection.collection_date|date:"Y-m-d H:i" }}
+                    </p>
+
+                    <p>
+                        <strong>Collected By:</strong>
+
+                        {% if test_request.sample_collection.collected_by %}
+                            {{ test_request.sample_collection.collected_by.get_full_name|default:test_request.sample_collection.collected_by.username }}
+                        {% else %}
+                            Not recorded
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Collection Notes:</strong>
+                    </p>
+
+                    <p class="notes">
+                        {% if test_request.sample_collection.collection_notes %}
+                            {{ test_request.sample_collection.collection_notes }}
+                        {% else %}
+                            No collection notes recorded.
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            {% if test_request.test_processing %}
+
+            <div class="timeline-item">
+
+                <div class="timeline-title">
+                    3. Test Processing
+                </div>
+
+                <div class="timeline-content">
+
+                    <p>
+                        <strong>Processing Date:</strong>
+                        {{ test_request.test_processing.processing_date|date:"Y-m-d H:i" }}
+                    </p>
+
+                    <p>
+                        <strong>Processed By:</strong>
+
+                        {% if test_request.test_processing.processed_by %}
+                            {{ test_request.test_processing.processed_by.get_full_name|default:test_request.test_processing.processed_by.username }}
+                        {% else %}
+                            Not recorded
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Processing Notes:</strong>
+                    </p>
+
+                    <p class="notes">
+                        {% if test_request.test_processing.processing_notes %}
+                            {{ test_request.test_processing.processing_notes }}
+                        {% else %}
+                            No processing notes recorded.
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            {% if test_request.test_result %}
+
+            <div class="timeline-item">
+
+                <div class="timeline-title">
+                    4. Test Result
+                </div>
+
+                <div class="timeline-content">
+
+                    <p>
+                        <strong>Result Date:</strong>
+                        {{ test_request.test_result.result_date|date:"Y-m-d H:i" }}
+                    </p>
+
+                    <p>
+                        <strong>Recorded By:</strong>
+
+                        {% if test_request.test_result.recorded_by %}
+                            {{ test_request.test_result.recorded_by.get_full_name|default:test_request.test_result.recorded_by.username }}
+                        {% else %}
+                            Not recorded
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Result:</strong>
+                    </p>
+
+                    <p class="notes">
+                        {{ test_request.test_result.result_value }}
+                    </p>
+
+                    <p>
+                        <strong>Reference Range:</strong>
+                        {% if test_request.test_result.reference_range %}
+                            {{ test_request.test_result.reference_range }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Unit:</strong>
+                        {% if test_request.test_result.unit %}
+                            {{ test_request.test_result.unit }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <strong>Result Notes:</strong>
+                    </p>
+
+                    <p class="notes">
+                        {% if test_request.test_result.result_notes %}
+                            {{ test_request.test_result.result_notes }}
+                        {% else %}
+                            No result notes recorded.
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            {% if test_request.test_result.verification %}
+
+            <div class="timeline-item">
+
+                <div class="timeline-title">
+                    5. Result Verification
+                </div>
+
+                <div class="timeline-content">
+
+                    <p>
+                        <strong>Verification Status:</strong>
+
+                        {% if test_request.test_result.verification.verification_status == 'Verified' %}
+                            <span class="status verified">
+                                Verified
+                            </span>
+                        {% else %}
+                            <span class="status rejected">
+                                Rejected
+                            </span>
+                        {% endif %}
+
+                    </p>
+
+                    <p>
+                        <strong>Verification Date:</strong>
+                        {{ test_request.test_result.verification.verification_date|date:"Y-m-d H:i" }}
+                    </p>
+
+                    <p>
+                        <strong>Verified By:</strong>
+
+                        {% if test_request.test_result.verification.verified_by %}
+                            {{ test_request.test_result.verification.verified_by.get_full_name|default:test_request.test_result.verification.verified_by.username }}
+                        {% else %}
+                            Not recorded
+                        {% endif %}
+
+                    </p>
+
+                    <p>
+                        <strong>Verification Notes:</strong>
+                    </p>
+
+                    <p class="notes">
+                        {% if test_request.test_result.verification.verification_notes %}
+                            {{ test_request.test_result.verification.verification_notes }}
+                        {% else %}
+                            No verification notes recorded.
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html> 

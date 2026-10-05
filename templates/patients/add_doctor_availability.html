@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Doctor Availability | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        select,
+        input[type="time"] {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .availability-options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .availability-options label {
+            font-weight: normal;
+            display: inline;
+            margin-left: 5px;
+        }
+
+        .button-group {
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 18px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-button {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .save-button:hover {
+            background-color: #219150;
+        }
+
+        .cancel-button {
+            background-color: #7f8c8d;
+            color: white;
+        }
+
+        .cancel-button:hover {
+            background-color: #6c7778;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Add Doctor Availability</h1>
+
+    <p class="subtitle">
+        Clinic Management System — Appointment Management
+    </p>
+
+    <div class="form-container">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label for="doctor">
+                    Doctor
+                </label>
+
+                <select
+                    id="doctor"
+                    name="doctor"
+                    required
+                >
+
+                    <option value="">
+                        Select Doctor
+                    </option>
+
+                    {% for doctor in doctors %}
+
+                        <option value="{{ doctor.id }}">
+
+                            {% if doctor.get_full_name %}
+                                {{ doctor.get_full_name }}
+                            {% else %}
+                                {{ doctor.username }}
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="day">
+                    Day
+                </label>
+
+                <select
+                    id="day"
+                    name="day"
+                    required
+                >
+
+                    <option value="">
+                        Select Day
+                    </option>
+
+                    {% for value, label in days %}
+
+                        <option value="{{ value }}">
+                            {{ label }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="start_time">
+                    Start Time
+                </label>
+
+                <input
+                    type="time"
+                    id="start_time"
+                    name="start_time"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="end_time">
+                    End Time
+                </label>
+
+                <input
+                    type="time"
+                    id="end_time"
+                    name="end_time"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Availability
+                </label>
+
+                <div class="availability-options">
+
+                    <div>
+                        <input
+                            type="radio"
+                            id="available"
+                            name="is_available"
+                            value="True"
+                            checked
+                        >
+
+                        <label for="available">
+                            Available
+                        </label>
+                    </div>
+
+                    <div>
+                        <input
+                            type="radio"
+                            id="unavailable"
+                            name="is_available"
+                            value="False"
+                        >
+
+                        <label for="unavailable">
+                            Unavailable
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="button save-button"
+                >
+                    Save Availability
+                </button>
+
+                <a
+                    href="{% url 'doctor_availability' %}"
+                    class="button cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

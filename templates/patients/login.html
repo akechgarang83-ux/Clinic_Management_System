@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinic Management System - Login</title>
+</head>
+
+<body>
+
+    <h1>CLINIC MANAGEMENT SYSTEM</h1>
+
+    <h2>USER LOGIN</h2>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <p>
+            <label>Username:</label>
+            <input
+                type="text"
+                name="username"
+                required
+            >
+        </p>
+
+        <p>
+            <label>Password:</label>
+            <input
+                type="password"
+                name="password"
+                required
+            >
+        </p>
+
+        <button type="submit">
+            LOGIN
+        </button>
+
+    </form>
+
+    <p>
+        Don't have an account?
+        <a href="{% url 'register' %}">
+            Register here
+        </a>
+    </p>
+
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Daily / Monthly / Yearly Reports | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin-top: 8px;
+            font-size: 16px;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #444;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .generate-button {
+            background-color: #198754;
+            color: white;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .print-button {
+            background-color: #0dcaf0;
+            color: #000;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(200px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .summary-card {
+            padding: 22px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .summary-card .number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .patients {
+            background-color: #0d6efd;
+        }
+
+        .appointments {
+            background-color: #6f42c1;
+        }
+
+        .consultations {
+            background-color: #fd7e14;
+        }
+
+        .prescriptions {
+            background-color: #198754;
+        }
+
+        .laboratory {
+            background-color: #20c997;
+        }
+
+        .dispensing {
+            background-color: #dc3545;
+        }
+
+        .invoices {
+            background-color: #6610f2;
+        }
+
+        .payments {
+            background-color: #d63384;
+        }
+
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(220px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .financial-card {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #0d6efd;
+        }
+
+        .financial-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .financial-card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #198754;
+        }
+
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        @media print {
+
+            .no-print {
+                display: none;
+            }
+
+            body {
+                background-color: white;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>
+            Clinic Management System
+        </h1>
+
+        <p>
+            Eden Clinic and Pharmacy
+        </p>
+
+    </div>
+
+
+    <div class="container">
+
+
+        <div class="card no-print">
+
+            <h2>
+                Daily / Monthly / Yearly Reports
+            </h2>
+
+            <form method="GET">
+
+                <div class="filters">
+
+
+                    <div class="form-group">
+
+                        <label for="report_type">
+                            Report Type
+                        </label>
+
+                        <select
+                            name="report_type"
+                            id="report_type"
+                        >
+
+                            <option
+                                value="daily"
+                                {% if report_type == 'daily' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Daily Report
+                            </option>
+
+                            <option
+                                value="monthly"
+                                {% if report_type == 'monthly' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Monthly Report
+                            </option>
+
+                            <option
+                                value="yearly"
+                                {% if report_type == 'yearly' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Yearly Report
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div
+                        class="form-group"
+                        id="daily-field"
+                    >
+
+                        <label for="date">
+                            Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date"
+                            id="date"
+                            value="{{ selected_date }}"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="form-group"
+                        id="monthly-field"
+                    >
+
+                        <label for="month">
+                            Month
+                        </label>
+
+                        <input
+                            type="month"
+                            name="month"
+                            id="month"
+                            value="{{ selected_month }}"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="form-group"
+                        id="yearly-field"
+                    >
+
+                        <label for="year">
+                            Year
+                        </label>
+
+                        <input
+                            type="number"
+                            name="year"
+                            id="year"
+                            value="{{ selected_year }}"
+                            min="2000"
+                            max="2100"
+                        >
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="button generate-button"
+                    >
+                        Generate Report
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <div class="actions">
+
+                <a
+                    href="{% url 'reports_dashboard' %}"
+                    class="button back-button"
+                >
+                    ← Back to Reports
+                </a>
+
+                <button
+                    type="button"
+                    onclick="window.print()"
+                    class="button print-button"
+                >
+                    🖨 Print Report
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Report Summary
+            </h2>
+
+            <div class="summary-grid">
+
+
+                <div class="summary-card patients">
+
+                    <h3>
+                        Patients
+                    </h3>
+
+                    <div class="number">
+                        {{ total_patients }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card appointments">
+
+                    <h3>
+                        Appointments
+                    </h3>
+
+                    <div class="number">
+                        {{ total_appointments }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card consultations">
+
+                    <h3>
+                        Consultations
+                    </h3>
+
+                    <div class="number">
+                        {{ total_consultations }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card prescriptions">
+
+                    <h3>
+                        Prescriptions
+                    </h3>
+
+                    <div class="number">
+                        {{ total_prescriptions }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card laboratory">
+
+                    <h3>
+                        Laboratory Tests
+                    </h3>
+
+                    <div class="number">
+                        {{ total_lab_tests }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card dispensing">
+
+                    <h3>
+                        Medicines Dispensed
+                    </h3>
+
+                    <div class="number">
+                        {{ total_dispensings }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card invoices">
+
+                    <h3>
+                        Invoices
+                    </h3>
+
+                    <div class="number">
+                        {{ total_invoices }}
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card payments">
+
+                    <h3>
+                        Payments
+                    </h3>
+
+                    <div class="number">
+                        {{ total_payments }}
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Financial Summary
+            </h2>
+
+            <div class="financial-grid">
+
+
+                <div class="financial-card">
+
+                    <h3>
+                        Total Invoice Amount
+                    </h3>
+
+                    <p>
+                        {{ total_invoice_amount|floatformat:2 }}
+                    </p>
+
+                </div>
+
+
+                <div class="financial-card">
+
+                    <h3>
+                        Total Amount Paid
+                    </h3>
+
+                    <p>
+                        {{ total_amount_paid|floatformat:2 }}
+                    </p>
+
+                </div>
+
+
+                <div class="financial-card">
+
+                    <h3>
+                        Outstanding Balance
+                    </h3>
+
+                    <p>
+                        {{ total_outstanding|floatformat:2 }}
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+        const reportType =
+            document.getElementById(
+                "report_type"
+            );
+
+        const dailyField =
+            document.getElementById(
+                "daily-field"
+            );
+
+        const monthlyField =
+            document.getElementById(
+                "monthly-field"
+            );
+
+        const yearlyField =
+            document.getElementById(
+                "yearly-field"
+            );
+
+
+        function updateFields() {
+
+            dailyField.style.display = "none";
+
+            monthlyField.style.display = "none";
+
+            yearlyField.style.display = "none";
+
+
+            if (reportType.value === "daily") {
+
+                dailyField.style.display = "flex";
+
+            }
+
+
+            if (reportType.value === "monthly") {
+
+                monthlyField.style.display = "flex";
+
+            }
+
+
+            if (reportType.value === "yearly") {
+
+                yearlyField.style.display = "flex";
+
+            }
+
+        }
+
+
+        reportType.addEventListener(
+            "change",
+            updateFields
+        );
+
+
+        updateFields();
+
+    </script>
+
+</body>
+
+</html>
+

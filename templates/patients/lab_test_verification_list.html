@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Laboratory Results Verification | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .subtitle {
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        .top-actions {
+            margin-bottom: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 8px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .add-button {
+            background-color: #28a745;
+        }
+
+        .add-button:hover {
+            background-color: #218838;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+        .back-button:hover {
+            background-color: #545b62;
+        }
+
+        .search-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .search-container form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 11px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-button {
+            padding: 11px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dddddd;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            color: #333333;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-verified {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #666666;
+        }
+
+        .info-box {
+            background-color: #e7f3ff;
+            border: 1px solid #b8daff;
+            color: #004085;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Laboratory Results Verification</h1>
+
+        <div class="subtitle">
+            Review and verify completed laboratory test results.
+        </div>
+
+        <div class="top-actions">
+
+            <a
+                href="{% url 'add_lab_test_verification' %}"
+                class="button add-button"
+            >
+                + Verify Test Result
+            </a>
+
+            <a
+                href="{% url 'lab_test_result_list' %}"
+                class="button back-button"
+            >
+                Test Results
+            </a>
+
+            <a
+                href="{% url 'lab_test_processing_list' %}"
+                class="button back-button"
+            >
+                Test Processing
+            </a>
+
+            <a
+                href="{% url 'lab_test_request_list' %}"
+                class="button back-button"
+            >
+                Test Requests
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="search-container">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search by patient, patient number, test name, result or status..."
+            >
+
+            <button
+                type="submit"
+                class="search-button"
+            >
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="info-box">
+
+        Completed laboratory results should be reviewed and verified
+        before being considered final.
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Patient</th>
+
+                    <th>Patient Number</th>
+
+                    <th>Test Category</th>
+
+                    <th>Test Name</th>
+
+                    <th>Result</th>
+
+                    <th>Verification Status</th>
+
+                    <th>Verified By</th>
+
+                    <th>Verification Date</th>
+
+                    <th>Verification Notes</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for verification in verifications %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        {{ verification.lab_test_result.lab_test_request.patient.first_name }}
+                        {{ verification.lab_test_result.lab_test_request.patient.last_name }}
+                    </td>
+
+                    <td>
+                        {{ verification.lab_test_result.lab_test_request.patient.patient_number }}
+                    </td>
+
+                    <td>
+
+                        {% if verification.lab_test_result.lab_test_request.test_category %}
+
+                            {{ verification.lab_test_result.lab_test_request.test_category.name }}
+
+                        {% else %}
+
+                            N/A
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ verification.lab_test_result.lab_test_request.test_name }}
+                    </td>
+
+                    <td>
+                        {{ verification.lab_test_result.result_value }}
+                    </td>
+
+                    <td>
+
+                        {% if verification.verification_status == "Verified" %}
+
+                            <span class="status status-verified">
+                                Verified
+                            </span>
+
+                        {% else %}
+
+                            <span class="status status-rejected">
+                                Rejected
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if verification.verified_by %}
+
+                            {{ verification.verified_by.username }}
+
+                        {% else %}
+
+                            N/A
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ verification.verification_date|date:"M. d, Y H:i" }}
+                    </td>
+
+                    <td>
+
+                        {% if verification.verification_notes %}
+
+                            {{ verification.verification_notes }}
+
+                        {% else %}
+
+                            N/A
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="10"
+                        class="no-results"
+                    >
+                        No laboratory test results have been verified yet.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

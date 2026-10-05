@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Appointment List | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1250px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background-color: #545b62;
+        }
+
+        .filter-box {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .filter-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns:
+                2fr
+                1fr
+                1fr
+                1fr
+                auto
+                auto;
+
+            gap: 12px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .search-btn {
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .search-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .clear-btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .clear-btn:hover {
+            background-color: #545b62;
+        }
+
+        .results-info {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 13px;
+            text-align: left;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .scheduled {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .confirmed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .rescheduled {
+            background-color: #e2d9f3;
+            color: #4b2e83;
+        }
+
+        .view-btn {
+            display: inline-block;
+            padding: 7px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .view-btn:hover {
+            background-color: #0056b3;
+        }
+        .reschedule-btn {
+    display: inline-block;
+    padding: 7px 12px;
+    background-color: #ffc107;
+    color: #212529;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-left: 5px;
+}
+
+.reschedule-btn:hover {
+    background-color: #e0a800;
+}
+.cancel-btn {
+    display: inline-block;
+    padding: 7px 12px;
+    background-color: #c0392b;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-left: 5px;
+}
+
+.cancel-btn:hover {
+    background-color: #a93226;
+}
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        @media (max-width: 1000px) {
+
+            .filter-form {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <div class="top-bar">
+
+            <div>
+
+                <h1>
+                    Appointment List
+                </h1>
+
+                <div class="subtitle">
+                    Search and manage clinic appointments.
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'patient_list' %}"
+                class="back-btn"
+            >
+                Patient List
+            </a>
+
+        </div>
+
+
+        <!-- SEARCH AND FILTER SECTION -->
+
+        <div class="filter-box">
+
+            <div class="filter-title">
+                Search & Filter Appointments
+            </div>
+
+
+            <form
+                method="GET"
+                class="filter-form"
+            >
+
+                <div class="form-group">
+
+                    <label for="search">
+                        Patient Search
+                    </label>
+
+                    <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Name or patient number"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="appointment_date">
+                        Appointment Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="appointment_date"
+                        name="appointment_date"
+                        value="{{ appointment_date }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="doctor">
+                        Doctor
+                    </label>
+
+                    <select
+                        id="doctor"
+                        name="doctor"
+                    >
+
+                        <option value="">
+                            All Doctors
+                        </option>
+
+                        {% for doctor in doctors %}
+
+                            <option
+                                value="{{ doctor.id }}"
+                                {% if selected_doctor == doctor.id|stringformat:"s" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {% if doctor.get_full_name %}
+
+                                    {{ doctor.get_full_name }}
+
+                                {% else %}
+
+                                    {{ doctor.username }}
+
+                                {% endif %}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                    >
+
+                        <option value="">
+                            All Statuses
+                        </option>
+
+                        <option
+                            value="Scheduled"
+                            {% if selected_status == "Scheduled" %}
+                                selected
+                            {% endif %}
+                        >
+                            Scheduled
+                        </option>
+
+                        <option
+                            value="Confirmed"
+                            {% if selected_status == "Confirmed" %}
+                                selected
+                            {% endif %}
+                        >
+                            Confirmed
+                        </option>
+
+                        <option
+                            value="Completed"
+                            {% if selected_status == "Completed" %}
+                                selected
+                            {% endif %}
+                        >
+                            Completed
+                        </option>
+
+                        <option
+                            value="Cancelled"
+                            {% if selected_status == "Cancelled" %}
+                                selected
+                            {% endif %}
+                        >
+                            Cancelled
+                        </option>
+
+                        <option
+                            value="Rescheduled"
+                            {% if selected_status == "Rescheduled" %}
+                                selected
+                            {% endif %}
+                        >
+                            Rescheduled
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="search-btn"
+                >
+                    Search
+                </button>
+
+
+                <a
+                    href="{% url 'appointment_list' %}"
+                    class="clear-btn"
+                >
+                    Clear
+                </a>
+
+            </form>
+
+        </div>
+
+
+        <!-- RESULTS -->
+
+        <div class="results-info">
+
+            Showing
+            <strong>{{ appointments|length }}</strong>
+            appointment{{ appointments|length|pluralize }}.
+
+        </div>
+
+
+        <div class="table-container">
+
+            {% if appointments %}
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Patient
+                            </th>
+
+                            <th>
+                                Patient Number
+                            </th>
+
+                            <th>
+                                Doctor
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Reason
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for appointment in appointments %}
+
+                            <tr>
+
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
+
+
+                                <td>
+
+                                    {{ appointment.patient.first_name }}
+                                    {{ appointment.patient.last_name }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ appointment.patient.patient_number }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if appointment.doctor %}
+
+                                        {% if appointment.doctor.get_full_name %}
+
+                                            {{ appointment.doctor.get_full_name }}
+
+                                        {% else %}
+
+                                            {{ appointment.doctor.username }}
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        Not Assigned
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ appointment.appointment_date|date:"M d, Y" }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ appointment.appointment_time|time:"g:i A" }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if appointment.reason %}
+
+                                        {{ appointment.reason }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if appointment.status == "Scheduled" %}
+
+                                        <span class="status scheduled">
+                                            Scheduled
+                                        </span>
+
+                                    {% elif appointment.status == "Confirmed" %}
+
+                                        <span class="status confirmed">
+                                            Confirmed
+                                        </span>
+
+                                    {% elif appointment.status == "Completed" %}
+
+                                        <span class="status completed">
+                                            Completed
+                                        </span>
+
+                                    {% elif appointment.status == "Cancelled" %}
+
+                                        <span class="status cancelled">
+                                            Cancelled
+                                        </span>
+
+                                    {% elif appointment.status == "Rescheduled" %}
+
+                                        <span class="status rescheduled">
+                                            Rescheduled
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status">
+                                            {{ appointment.status }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+    <a
+        href="{% url 'patient_detail' appointment.patient.id %}"
+        class="view-btn"
+    >
+        View Patient
+    </a>
+
+    <a
+        href="{% url 'reschedule_appointment' appointment.id %}"
+        class="reschedule-btn"
+    >
+        Reschedule
+    </a>
+    <a
+    href="{% url 'cancel_appointment' appointment.id %}"
+    class="cancel-btn"
+>
+    Cancel
+</a>
+
+</td>
+                                
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            {% else %}
+
+                <div class="empty">
+
+                    <h3>
+                        No Appointments Found
+                    </h3>
+
+                    <p>
+                        No appointments match your search or filter.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

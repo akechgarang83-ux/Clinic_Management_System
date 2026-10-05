@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cancel Appointment | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 600px;
+            max-width: 90%;
+            margin: 60px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #c0392b;
+            margin-bottom: 25px;
+        }
+
+        .warning {
+            background-color: #fce4e4;
+            border: 1px solid #e0a0a0;
+            padding: 15px;
+            border-radius: 6px;
+            color: #8a1c1c;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .appointment-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+        }
+
+        .appointment-info p {
+            margin: 10px 0;
+        }
+
+        .appointment-info strong {
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        button,
+        .back-btn {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .cancel-btn {
+            background-color: #c0392b;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background-color: #a93226;
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Cancel Appointment</h1>
+
+        <div class="warning">
+            <strong>Warning:</strong>
+            Are you sure you want to cancel this appointment?
+            The appointment will remain in the system with a
+            <strong>Cancelled</strong> status.
+        </div>
+
+        <div class="appointment-info">
+
+            <p>
+                <strong>Patient:</strong>
+                {{ appointment.patient.first_name }}
+                {{ appointment.patient.last_name }}
+            </p>
+
+            <p>
+                <strong>Patient Number:</strong>
+                {{ appointment.patient.patient_number }}
+            </p>
+
+            <p>
+                <strong>Doctor:</strong>
+
+                {% if appointment.doctor %}
+                    {{ appointment.doctor.get_full_name }}
+                {% else %}
+                    Not Assigned
+                {% endif %}
+
+            </p>
+
+            <p>
+                <strong>Date:</strong>
+                {{ appointment.appointment_date }}
+            </p>
+
+            <p>
+                <strong>Time:</strong>
+                {{ appointment.appointment_time }}
+            </p>
+
+            <p>
+                <strong>Reason:</strong>
+                {{ appointment.reason|default:"Not provided" }}
+            </p>
+
+            <p>
+                <strong>Current Status:</strong>
+                {{ appointment.status }}
+            </p>
+
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="cancel-btn">
+                    Cancel Appointment
+                </button>
+
+                <a
+                    href="{% url 'patient_detail' appointment.patient.id %}"
+                    class="back-btn">
+                    Go Back
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

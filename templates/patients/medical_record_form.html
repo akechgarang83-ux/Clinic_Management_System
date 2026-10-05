@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Medical Record | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 700px;
+            max-width: 90%;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .patient-name {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 17px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button,
+        a {
+            padding: 11px 22px;
+            border-radius: 5px;
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .cancel-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background-color: #545b62;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Add Medical Record</h1>
+
+        <div class="patient-name">
+            Patient:
+            <strong>
+                {{ patient.first_name }} {{ patient.last_name }}
+            </strong>
+            <br>
+            Patient Number:
+            <strong>
+                {{ patient.patient_number }}
+            </strong>
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="symptoms">Symptoms / Complaints</label>
+
+                <textarea
+                    id="symptoms"
+                    name="symptoms"
+                    placeholder="Enter the patient's symptoms or complaints..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="diagnosis">Diagnosis</label>
+
+                <textarea
+                    id="diagnosis"
+                    name="diagnosis"
+                    placeholder="Enter the diagnosis..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="treatment">Treatment</label>
+
+                <textarea
+                    id="treatment"
+                    name="treatment"
+                    placeholder="Enter the treatment plan..."
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="prescription">Prescription</label>
+
+                <textarea
+                    id="prescription"
+                    name="prescription"
+                    placeholder="Enter prescribed medicines..."
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="doctor_notes">Doctor's Notes</label>
+
+                <textarea
+                    id="doctor_notes"
+                    name="doctor_notes"
+                    placeholder="Enter doctor's notes..."
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="follow_up">Follow-up</label>
+
+                <textarea
+                    id="follow_up"
+                    name="follow_up"
+                    placeholder="Enter follow-up instructions or date..."
+                ></textarea>
+            </div>
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    Save Medical Record
+                </button>
+
+                <a
+                    href="{% url 'patient_detail' patient.id %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

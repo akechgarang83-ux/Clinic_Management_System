@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Consultation Management | Clinic Management System
+    </title>
+
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+
+        .header {
+            background-color: #6f42c1;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            margin-bottom: 25px;
+        }
+
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+
+        h2 {
+            color: #343a40;
+            margin: 0;
+        }
+
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        .button {
+            display: inline-block;
+            padding: 10px 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+
+        .back-button:hover {
+            background-color: #545b62;
+        }
+
+
+        .add-button {
+            background-color: #6f42c1;
+        }
+
+
+        .add-button:hover {
+            background-color: #59359a;
+        }
+
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+        }
+
+
+        th {
+            background-color: #6f42c1;
+            color: white;
+        }
+
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+
+        .patient-name {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+
+        .doctor-name {
+            color: #6f42c1;
+            font-weight: bold;
+        }
+
+
+        .diagnosis {
+            font-weight: bold;
+            color: #198754;
+        }
+
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+
+        .info-box {
+            background-color: #f8f5fc;
+            border-left: 5px solid #6f42c1;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+
+        .info-box p {
+            margin: 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+
+        @media (max-width: 700px) {
+
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+
+            .button-group {
+                flex-direction: column;
+            }
+
+
+            .button {
+                text-align: center;
+            }
+
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            Clinic Management System
+        </h1>
+
+        <p>
+            Eden Clinic and Pharmacy
+        </p>
+
+    </div>
+
+
+
+    <!-- MAIN CONTAINER -->
+
+    <div class="container">
+
+
+        <div class="card">
+
+
+            <!-- TOP BAR -->
+
+            <div class="top-bar">
+
+                <h2>
+                    Consultation Management
+                </h2>
+
+
+                <div class="button-group">
+
+                    <a
+                        href="{% url 'patient_list' %}"
+                        class="button back-button"
+                    >
+                        ← Back to Patients
+                    </a>
+
+<a
+    href="{% url 'patient_management' %}"
+    class="button add-button"
+>
+    + Add Consultation
+</a>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- INFORMATION -->
+
+            <div class="info-box">
+
+                <p>
+
+                    This page displays all patient consultations
+                    recorded in the clinic management system.
+
+                    To add a new consultation, first select the
+                    appropriate patient.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- CONSULTATION TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Patient
+                            </th>
+
+                            <th>
+                                Patient Number
+                            </th>
+
+                            <th>
+                                Doctor
+                            </th>
+
+                            <th>
+                                Consultation Date
+                            </th>
+
+                            <th>
+                                Time
+                            </th>
+
+                            <th>
+                                Chief Complaint
+                            </th>
+
+                            <th>
+                                Symptoms
+                            </th>
+
+                            <th>
+                                Diagnosis
+                            </th>
+
+                            <th>
+                                Treatment Plan
+                            </th>
+
+                            <th>
+                                Follow-up
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                        {% for consultation in consultations %}
+
+
+                            <tr>
+
+
+                                <!-- PATIENT -->
+
+                                <td>
+
+                                    <span class="patient-name">
+
+                                        {{ consultation.patient.first_name }}
+
+                                        {{ consultation.patient.last_name }}
+
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- PATIENT NUMBER -->
+
+                                <td>
+
+                                    {{ consultation.patient.patient_number }}
+
+                                </td>
+
+
+
+                                <!-- DOCTOR -->
+
+                                <td>
+
+                                    {% if consultation.doctor %}
+
+
+                                        <span class="doctor-name">
+
+
+                                            {% if consultation.doctor.get_full_name %}
+
+                                                {{ consultation.doctor.get_full_name }}
+
+                                            {% else %}
+
+                                                {{ consultation.doctor.username }}
+
+                                            {% endif %}
+
+
+                                        </span>
+
+
+                                    {% else %}
+
+                                        Not assigned
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- DATE -->
+
+                                <td>
+
+                                    {{ consultation.consultation_date|date:"Y-m-d" }}
+
+                                </td>
+
+
+
+                                <!-- TIME -->
+
+                                <td>
+
+                                    {{ consultation.consultation_time|time:"H:i" }}
+
+                                </td>
+
+
+
+                                <!-- CHIEF COMPLAINT -->
+
+                                <td>
+
+                                    {{ consultation.chief_complaint|truncatechars:50 }}
+
+                                </td>
+
+
+
+                                <!-- SYMPTOMS -->
+
+                                <td>
+
+                                    {% if consultation.symptoms %}
+
+                                        {{ consultation.symptoms|truncatechars:50 }}
+
+                                    {% else %}
+
+                                        None
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- DIAGNOSIS -->
+
+                                <td>
+
+                                    {% if consultation.diagnosis %}
+
+                                        <span class="diagnosis">
+
+                                            {{ consultation.diagnosis|truncatechars:50 }}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        Not recorded
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- TREATMENT PLAN -->
+
+                                <td>
+
+                                    {% if consultation.treatment_plan %}
+
+                                        {{ consultation.treatment_plan|truncatechars:50 }}
+
+                                    {% else %}
+
+                                        None
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- FOLLOW-UP -->
+
+                                <td>
+
+                                    {% if consultation.follow_up %}
+
+                                        {{ consultation.follow_up|truncatechars:50 }}
+
+                                    {% else %}
+
+                                        None
+
+                                    {% endif %}
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% empty %}
+
+
+                            <tr>
+
+                                <td
+                                    colspan="10"
+                                    class="empty-message"
+                                >
+
+                                    No consultations have been
+                                    recorded yet.
+
+                                </td>
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>

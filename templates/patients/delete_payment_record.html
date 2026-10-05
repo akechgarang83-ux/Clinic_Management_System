@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Delete Payment Record | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 60px auto;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #333333;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .details {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .details p {
+            margin: 8px 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button,
+        .btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            Delete Payment Record
+        </h1>
+
+        <div class="warning">
+
+            Are you sure you want to delete this payment record?
+
+        </div>
+
+
+        <div class="details">
+
+            <p>
+                <strong>Patient:</strong>
+                {{ payment.patient.first_name }}
+                {{ payment.patient.last_name }}
+            </p>
+
+            <p>
+                <strong>Patient Number:</strong>
+                {{ payment.patient.patient_number }}
+            </p>
+
+            <p>
+                <strong>Invoice:</strong>
+                {{ payment.invoice.invoice_number }}
+            </p>
+
+            <p>
+                <strong>Amount Paid:</strong>
+                {{ payment.amount_paid|floatformat:2 }}
+            </p>
+
+            <p>
+                <strong>Payment Method:</strong>
+                {{ payment.payment_method }}
+            </p>
+
+            <p>
+                <strong>Reference:</strong>
+                {{ payment.reference_number|default:"-" }}
+            </p>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <button type="submit">
+                    Yes, Delete Payment
+                </button>
+
+            </form>
+
+
+            <a
+                href="{% url 'payment_record_list' %}"
+                class="btn"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

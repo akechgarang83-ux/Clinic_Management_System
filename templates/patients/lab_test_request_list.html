@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Laboratory Test Requests</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .navigation {
+            margin-bottom: 25px;
+        }
+
+        .navigation a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .navigation a:hover {
+            background-color: #0056b3;
+        }
+
+        .navigation .sample-button {
+            background-color: #28a745;
+        }
+
+        .navigation .sample-button:hover {
+            background-color: #1e7e34;
+        }
+
+        .navigation .processing-button {
+            background-color: #17a2b8;
+        }
+
+        .navigation .processing-button:hover {
+            background-color: #117a8b;
+        }
+
+        .navigation .result-button {
+            background-color: #6f42c1;
+        }
+
+        .navigation .result-button:hover {
+            background-color: #59339d;
+        }
+
+        .navigation .verification-button {
+            background-color: #fd7e14;
+        }
+
+        .navigation .verification-button:hover {
+            background-color: #dc6502;
+        }
+
+        .navigation .history-button {
+            background-color: #343a40;
+        }
+
+        .navigation .history-button:hover {
+            background-color: #23272b;
+        }
+
+        .search-form {
+            margin-bottom: 25px;
+        }
+
+        .search-form input {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-form button {
+            padding: 10px 18px;
+            border: none;
+            background-color: #343a40;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #23272b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Laboratory Test Requests
+        </h1>
+
+        <p class="description">
+            View and manage laboratory test requests.
+        </p>
+
+
+        <div class="navigation">
+
+            <!-- Add Laboratory Test Request -->
+
+            <a href="{% url 'add_lab_test_request' %}">
+                + Add Test Request
+            </a>
+
+
+            <!-- Laboratory Workflow -->
+
+            <a
+                href="{% url 'lab_sample_collection_list' %}"
+                class="sample-button"
+            >
+                Sample Collection
+            </a>
+
+
+            <a
+                href="{% url 'lab_test_processing_list' %}"
+                class="processing-button"
+            >
+                Test Processing
+            </a>
+
+
+            <a
+                href="{% url 'lab_test_result_list' %}"
+                class="result-button"
+            >
+                Test Results
+            </a>
+
+
+            <a
+                href="{% url 'lab_test_verification_list' %}"
+                class="verification-button"
+            >
+                Test Verification
+            </a>
+
+
+            <a
+                href="{% url 'laboratory_history' %}"
+                class="history-button"
+            >
+                Laboratory History
+            </a>
+
+
+            <!-- Other Modules -->
+
+            <a href="{% url 'patient_management' %}">
+                Patient Management
+            </a>
+
+
+            <a href="{% url 'consultation_fee_list' %}">
+                Billing
+            </a>
+
+        </div>
+
+
+        <form
+            method="GET"
+            class="search-form"
+        >
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search patient or test..."
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+
+        {% if requests %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Patient</th>
+
+                        <th>Patient Number</th>
+
+                        <th>Test Category</th>
+
+                        <th>Test Name</th>
+
+                        <th>Consultation</th>
+
+                        <th>Request Date</th>
+
+                        <th>Status</th>
+
+                        <th>Requested By</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for request in requests %}
+
+                        <tr>
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+                            <td>
+
+                                {{ request.patient.first_name }}
+                                {{ request.patient.last_name }}
+
+                            </td>
+
+                            <td>
+                                {{ request.patient.patient_number }}
+                            </td>
+
+                            <td>
+
+                                {% if request.test_category %}
+
+                                    {{ request.test_category.name }}
+
+                                {% else %}
+
+                                    N/A
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ request.test_name }}
+                            </td>
+
+                            <td>
+
+                                {% if request.consultation %}
+
+                                    {{ request.consultation.consultation_date }}
+
+                                {% else %}
+
+                                    N/A
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ request.request_date|date:"Y-m-d H:i" }}
+                            </td>
+
+                            <td class="status">
+                                {{ request.status }}
+                            </td>
+
+                            <td>
+
+                                {% if request.requested_by %}
+
+                                    {{ request.requested_by.get_full_name|default:request.requested_by.username }}
+
+                                {% else %}
+
+                                    N/A
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% else %}
+
+            <div class="empty-message">
+
+                <h3>
+                    No Laboratory Test Requests
+                </h3>
+
+                <p>
+                    No laboratory test requests have been created yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
+

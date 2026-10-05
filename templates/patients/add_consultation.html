@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Add Consultation | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .patient-info {
+            background-color: #eaf2f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .patient-info strong {
+            color: #2c3e50;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .help-text {
+            color: #777;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .button-group {
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-button {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .save-button:hover {
+            background-color: #219150;
+        }
+
+        .cancel-button {
+            background-color: #7f8c8d;
+            color: white;
+        }
+
+        .cancel-button:hover {
+            background-color: #6c7778;
+        }
+
+        @media (max-width: 600px) {
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .button {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Patient Consultation
+    </h1>
+
+    <p class="subtitle">
+        Clinic Management System — Consultation & Diagnosis
+    </p>
+
+
+    <div class="patient-info">
+
+        <strong>Patient:</strong>
+
+        {{ patient.first_name }}
+        {{ patient.last_name }}
+
+        <br>
+
+        <strong>Patient Number:</strong>
+
+        {{ patient.patient_number }}
+
+    </div>
+
+
+    <div class="form-container">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- DOCTOR -->
+
+            <h2 class="section-title">
+                Consultation Information
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="doctor">
+
+                    Doctor
+                    <span class="required">*</span>
+
+                </label>
+
+                <select
+                    id="doctor"
+                    name="doctor"
+                    required
+                >
+
+                    <option value="">
+                        Select Doctor
+                    </option>
+
+                    {% for doctor in doctors %}
+
+                        <option value="{{ doctor.id }}">
+
+                            {% if doctor.get_full_name %}
+
+                                {{ doctor.get_full_name }}
+
+                            {% else %}
+
+                                {{ doctor.username }}
+
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- CHIEF COMPLAINT -->
+
+            <div class="form-group">
+
+                <label for="chief_complaint">
+
+                    Chief Complaint
+                    <span class="required">*</span>
+
+                </label>
+
+                <textarea
+                    id="chief_complaint"
+                    name="chief_complaint"
+                    placeholder="Enter the patient's main complaint..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- VITAL SIGNS -->
+
+            <h2 class="section-title">
+                Vital Signs
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="vital_signs">
+                    Vital Signs
+                </label>
+
+                <textarea
+                    id="vital_signs"
+                    name="vital_signs"
+                    placeholder="Example: Blood Pressure: 120/80 mmHg&#10;Pulse: 72 bpm&#10;Temperature: 37°C&#10;Respiratory Rate: 16 breaths/min&#10;SpO₂: 98%"
+                ></textarea>
+
+                <div class="help-text">
+                    Record the patient's vital signs.
+                </div>
+
+            </div>
+
+
+            <!-- SYMPTOMS -->
+
+            <h2 class="section-title">
+                Symptoms
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="symptoms">
+                    Symptoms
+                </label>
+
+                <textarea
+                    id="symptoms"
+                    name="symptoms"
+                    placeholder="Describe the patient's symptoms..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- DIAGNOSIS -->
+
+            <h2 class="section-title">
+                Diagnosis
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="diagnosis">
+                    Diagnosis
+                </label>
+
+                <textarea
+                    id="diagnosis"
+                    name="diagnosis"
+                    placeholder="Enter the diagnosis..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- DOCTOR NOTES -->
+
+            <h2 class="section-title">
+                Doctor's Notes
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="doctor_notes">
+                    Doctor's Notes
+                </label>
+
+                <textarea
+                    id="doctor_notes"
+                    name="doctor_notes"
+                    placeholder="Enter the doctor's clinical notes..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- TREATMENT PLAN -->
+
+            <h2 class="section-title">
+                Treatment Plan
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="treatment_plan">
+                    Treatment Plan
+                </label>
+
+                <textarea
+                    id="treatment_plan"
+                    name="treatment_plan"
+                    placeholder="Enter the recommended treatment plan..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- FOLLOW UP -->
+
+            <h2 class="section-title">
+                Follow-up
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="follow_up">
+                    Follow-up
+                </label>
+
+                <textarea
+                    id="follow_up"
+                    name="follow_up"
+                    placeholder="Enter follow-up instructions or next appointment information..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="button save-button"
+                >
+                    Save Consultation
+                </button>
+
+
+                <a
+                    href="{% url 'patient_detail' patient.id %}"
+                    class="button cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

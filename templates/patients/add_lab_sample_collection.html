@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Collect Laboratory Sample | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 70%;
+            margin: 40px auto;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .subtitle {
+            color: #666666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        select,
+        textarea,
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            margin-top: 25px;
+        }
+
+        .save-button {
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-button:hover {
+            background-color: #218838;
+        }
+
+        .cancel-button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin-left: 10px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .cancel-button:hover {
+            background-color: #545b62;
+        }
+
+        .info {
+            background-color: #e7f3ff;
+            border: 1px solid #b8daff;
+            color: #004085;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-container">
+
+        <h1>Collect Laboratory Sample</h1>
+
+        <div class="subtitle">
+            Record the collection of a laboratory sample for a test request.
+        </div>
+
+        <div class="info">
+            Select a laboratory test request that is still awaiting sample collection.
+        </div>
+
+        {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+        {% if test_requests %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label for="lab_test_request">
+                    Laboratory Test Request
+                    <span class="required">*</span>
+                </label>
+
+                <select
+                    name="lab_test_request"
+                    id="lab_test_request"
+                    required
+                >
+
+                    <option value="">
+                        -- Select Laboratory Test Request --
+                    </option>
+
+                    {% for test_request in test_requests %}
+
+                    <option value="{{ test_request.id }}">
+
+                        {{ test_request.patient.first_name }}
+                        {{ test_request.patient.last_name }}
+
+                        -
+                        {{ test_request.patient.patient_number }}
+
+                        -
+                        {{ test_request.test_name }}
+
+                        {% if test_request.test_category %}
+                            ({{ test_request.test_category.name }})
+                        {% endif %}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="sample_type">
+                    Sample Type
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    name="sample_type"
+                    id="sample_type"
+                    placeholder="Example: Blood, Urine, Stool"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="collection_notes">
+                    Collection Notes
+                </label>
+
+                <textarea
+                    name="collection_notes"
+                    id="collection_notes"
+                    placeholder="Enter any relevant notes about the sample collection..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    Save Sample Collection
+                </button>
+
+                <a
+                    href="{% url 'lab_sample_collection_list' %}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+        {% else %}
+
+        <div class="info">
+            There are currently no laboratory test requests awaiting sample collection.
+        </div>
+
+        <div class="button-group">
+
+            <a
+                href="{% url 'lab_test_request_list' %}"
+                class="cancel-button"
+            >
+                Back to Test Requests
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

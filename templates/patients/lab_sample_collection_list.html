@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Laboratory Sample Collections | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #333333;
+        }
+
+        .subtitle {
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        .navigation {
+            margin-top: 15px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 16px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .search-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-box input {
+            width: 70%;
+            padding: 11px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-button {
+            padding: 11px 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #343a40;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 4px;
+            background-color: #fff3cd;
+            color: #856404;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777777;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Laboratory Sample Collections</h1>
+
+        <div class="subtitle">
+            Manage collected laboratory samples for requested tests.
+        </div>
+
+        <div class="navigation">
+
+            <a href="{% url 'add_lab_sample_collection' %}" class="button">
+                + Collect Sample
+            </a>
+
+            <a href="{% url 'lab_test_request_list' %}" class="button">
+                Test Requests
+            </a>
+
+            <a href="{% url 'lab_test_category_list' %}" class="button">
+                Test Categories
+            </a>
+
+            <a href="{% url 'patient_list' %}" class="button">
+                Patient Management
+            </a>
+
+            <a href="{% url 'invoice_list' %}" class="button">
+                Billing
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="search-box">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search patient, patient number, test name or sample type..."
+            >
+
+            <button type="submit" class="search-button">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="table-container">
+
+        {% if collections %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>#</th>
+                    <th>Patient</th>
+                    <th>Patient Number</th>
+                    <th>Test Category</th>
+                    <th>Test Name</th>
+                    <th>Sample Type</th>
+                    <th>Collection Date</th>
+                    <th>Collected By</th>
+                    <th>Notes</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for collection in collections %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        {{ collection.lab_test_request.patient.first_name }}
+                        {{ collection.lab_test_request.patient.last_name }}
+                    </td>
+
+                    <td>
+                        {{ collection.lab_test_request.patient.patient_number }}
+                    </td>
+
+                    <td>
+                        {% if collection.lab_test_request.test_category %}
+                            {{ collection.lab_test_request.test_category.name }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ collection.lab_test_request.test_name }}
+                    </td>
+
+                    <td>
+                        {{ collection.sample_type }}
+                    </td>
+
+                    <td>
+                        {{ collection.collection_date|date:"Y-m-d H:i" }}
+                    </td>
+
+                    <td>
+                        {% if collection.collected_by %}
+                            {{ collection.collected_by.get_full_name|default:collection.collected_by.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if collection.collection_notes %}
+                            {{ collection.collection_notes }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+
+            <h3>No Sample Collections</h3>
+
+            <p>
+                No laboratory samples have been collected yet.
+            </p>
+
+            <a href="{% url 'add_lab_sample_collection' %}" class="button">
+                + Collect First Sample
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Select Patient | Prescription Management
+    </title>
+
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+
+        .header {
+            background-color: #0077b6;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+
+        .container {
+            width: 94%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+            flex-wrap: wrap;
+
+            margin-bottom: 20px;
+        }
+
+
+        h2 {
+            color: #023e8a;
+            margin: 0;
+        }
+
+
+        .button {
+            display: inline-block;
+
+            padding: 10px 18px;
+
+            color: white;
+            text-decoration: none;
+
+            border-radius: 5px;
+
+            font-size: 14px;
+        }
+
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+
+        .back-button:hover {
+            background-color: #545b62;
+        }
+
+
+        .info-box {
+            background-color: #f8fbfd;
+
+            border-left: 5px solid #0077b6;
+
+            padding: 15px;
+
+            margin-bottom: 20px;
+
+            border-radius: 5px;
+        }
+
+
+        .info-box p {
+            margin: 0;
+
+            color: #555;
+
+            font-size: 14px;
+        }
+
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+
+        th,
+        td {
+            padding: 12px;
+
+            border: 1px solid #ddd;
+
+            text-align: left;
+        }
+
+
+        th {
+            background-color: #023e8a;
+
+            color: white;
+        }
+
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+
+        .patient-name {
+            font-weight: bold;
+
+            color: #023e8a;
+        }
+
+
+        .patient-number {
+            color: #555;
+        }
+
+
+        .select-button {
+            display: inline-block;
+
+            padding: 8px 14px;
+
+            background-color: #28a745;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 5px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        .select-button:hover {
+            background-color: #218838;
+        }
+
+
+        .empty-message {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #666;
+        }
+
+
+        .footer {
+            background-color: #343a40;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 18px;
+
+            margin-top: 30px;
+
+            font-size: 13px;
+        }
+
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+            }
+
+
+            .top-bar {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .button {
+                text-align: center;
+            }
+
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            Clinic Management System
+        </h1>
+
+        <p>
+            Eden Clinic and Pharmacy
+        </p>
+
+    </div>
+
+
+    <!-- MAIN CONTAINER -->
+
+    <div class="container">
+
+
+        <div class="card">
+
+
+            <!-- TOP BAR -->
+
+            <div class="top-bar">
+
+                <h2>
+                    Select Patient
+                </h2>
+
+
+                <a
+                    href="{% url 'prescription_list' %}"
+                    class="button back-button"
+                >
+                    ← Back to Prescriptions
+                </a>
+
+            </div>
+
+
+            <!-- INFORMATION -->
+
+            <div class="info-box">
+
+                <p>
+                    Select the patient for whom you want to create
+                    a new prescription.
+                </p>
+
+            </div>
+
+
+            <!-- PATIENT TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Patient Name
+                            </th>
+
+                            <th>
+                                Patient Number
+                            </th>
+
+                            <th>
+                                Gender
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for patient in patients %}
+
+                        <tr>
+
+
+                            <!-- PATIENT NAME -->
+
+                            <td>
+
+                                <span class="patient-name">
+
+                                    {{ patient.first_name }}
+                                    {{ patient.last_name }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- PATIENT NUMBER -->
+
+                            <td>
+
+                                <span class="patient-number">
+
+                                    {{ patient.patient_number }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- GENDER -->
+
+                            <td>
+
+                                {{ patient.gender }}
+
+                            </td>
+
+
+                            <!-- PHONE -->
+
+                            <td>
+
+                                {{ patient.phone }}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {{ patient.status }}
+
+                            </td>
+
+
+                            <!-- ACTION -->
+
+                            <td>
+
+                                <a
+                                    href="{% url 'add_prescription' patient.id %}"
+                                    class="select-button"
+                                >
+                                    Select Patient
+                                </a>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="empty-message"
+                            >
+
+                                No patients have been registered yet.
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <p>
+            Clinic Management System |
+            Eden Clinic and Pharmacy
+        </p>
+
+        <p>
+            Pharmacy &amp; Prescription Management
+        </p>
+
+    </div>
+
+
+</body>
+
+</html>
+

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Outstanding Balances | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .summary-amount {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .navigation {
+            margin-bottom: 25px;
+        }
+
+        .navigation a {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin-right: 8px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .search-form {
+            margin-bottom: 25px;
+        }
+
+        .search-form input {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-form button {
+            padding: 10px 18px;
+            border: none;
+            background-color: #343a40;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .amount {
+            text-align: right;
+        }
+
+        .balance {
+            font-weight: bold;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .view-button {
+            display: inline-block;
+            padding: 7px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f5f5f5;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Outstanding Balances
+        </h1>
+
+        <p class="description">
+            View and manage all invoices with outstanding patient balances.
+        </p>
+
+
+        <div class="navigation">
+
+            <a href="{% url 'invoice_list' %}">
+                Invoice Management
+            </a>
+
+            <a href="{% url 'payment_record_list' %}">
+                Payment Records
+            </a>
+
+            <a href="{% url 'consultation_fee_list' %}">
+                Consultation Fees
+            </a>
+
+            <a href="{% url 'medicine_charge_list' %}">
+                Medicine Charges
+            </a>
+
+            <a href="{% url 'patient_list' %}">
+                Patient Management
+            </a>
+
+        </div>
+
+
+        <div class="summary">
+
+            <div class="summary-title">
+                Total Outstanding Balance
+            </div>
+
+            <div class="summary-amount">
+                {{ total_outstanding|floatformat:2 }}
+            </div>
+
+        </div>
+
+
+        <form
+            method="GET"
+            class="search-form"
+        >
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search patient or invoice..."
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+
+        {% if invoices %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Patient</th>
+
+                        <th>Patient Number</th>
+
+                        <th>Invoice</th>
+
+                        <th>Invoice Total</th>
+
+                        <th>Amount Paid</th>
+
+                        <th>Outstanding Balance</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for invoice in invoices %}
+
+                        <tr>
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+                            <td>
+                                {{ invoice.patient.first_name }}
+                                {{ invoice.patient.last_name }}
+                            </td>
+
+                            <td>
+                                {{ invoice.patient.patient_number }}
+                            </td>
+
+                            <td>
+                                {{ invoice.invoice_number }}
+                            </td>
+
+                            <td class="amount">
+                                {{ invoice.total_amount|floatformat:2 }}
+                            </td>
+
+                            <td class="amount">
+                                {{ invoice.amount_paid|floatformat:2 }}
+                            </td>
+
+                            <td class="amount balance">
+                                {{ invoice.balance|floatformat:2 }}
+                            </td>
+
+                            <td class="status">
+                                {{ invoice.status }}
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="{% url 'invoice_list' %}"
+                                    class="view-button"
+                                >
+                                    View Invoice
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+                <tfoot>
+
+                    <tr class="total-row">
+
+                        <td colspan="6">
+                            Total Outstanding
+                        </td>
+
+                        <td class="amount">
+                            {{ total_outstanding|floatformat:2 }}
+                        </td>
+
+                        <td colspan="2"></td>
+
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+        {% else %}
+
+            <div class="empty-message">
+
+                <h3>
+                    No Outstanding Balances
+                </h3>
+
+                <p>
+                    There are currently no invoices with outstanding balances.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>

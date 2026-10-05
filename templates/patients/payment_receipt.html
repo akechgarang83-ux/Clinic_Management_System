@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Payment Receipt | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .receipt-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header h2 {
+            margin: 8px 0;
+            font-size: 20px;
+        }
+
+        .header p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .receipt-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .receipt-title h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .detail-box {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        .detail-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .amount {
+            text-align: right;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f5f5f5;
+        }
+
+        .payment-row {
+            font-weight: bold;
+        }
+
+        .balance-row {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .status {
+            margin-top: 25px;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+            color: #666;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .buttons a,
+        .buttons button {
+            display: inline-block;
+            padding: 10px 18px;
+            margin: 5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .print-button {
+            background-color: #007bff;
+            color: white;
+        }
+
+        @media print {
+
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .receipt-container {
+                box-shadow: none;
+                max-width: none;
+                padding: 20px;
+            }
+
+            .buttons {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="receipt-container">
+
+        <div class="header">
+
+            <h1>Eden Clinic and Pharmacy</h1>
+
+            <h2>Clinic Management System</h2>
+
+            <p>Juba, Central Equatoria, South Sudan</p>
+
+            <p>Official Payment Receipt</p>
+
+        </div>
+
+
+        <div class="receipt-title">
+
+            <h2>PAYMENT RECEIPT</h2>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail-box">
+
+                <strong>Receipt Number:</strong>
+
+                RCPT-{{ payment.id|stringformat:"04d" }}
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <strong>Invoice Number:</strong>
+
+                {{ invoice.invoice_number }}
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <strong>Patient Name:</strong>
+
+                {{ patient.first_name }} {{ patient.last_name }}
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <strong>Patient Number:</strong>
+
+                {{ patient.patient_number }}
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <strong>Payment Date:</strong>
+
+                {{ payment.payment_date|date:"F d, Y H:i" }}
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <strong>Payment Method:</strong>
+
+                {{ payment.payment_method }}
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <strong>Reference Number:</strong>
+
+                {% if payment.reference_number %}
+
+                    {{ payment.reference_number }}
+
+                {% else %}
+
+                    N/A
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="detail-box">
+
+                <strong>Payment Status:</strong>
+
+                {{ invoice.status }}
+
+            </div>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Description</th>
+
+                    <th class="amount">Amount</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td>Invoice Total</td>
+
+                    <td class="amount">
+                        {{ invoice.total_amount|floatformat:2 }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>Previous Payments</td>
+
+                    <td class="amount">
+                        {{ previous_payments|floatformat:2 }}
+                    </td>
+
+                </tr>
+
+
+                <tr class="payment-row">
+
+                    <td>This Payment</td>
+
+                    <td class="amount">
+                        {{ payment.amount_paid|floatformat:2 }}
+                    </td>
+
+                </tr>
+
+
+                <tr class="total-row">
+
+                    <td>Total Amount Paid</td>
+
+                    <td class="amount">
+                        {{ invoice.amount_paid|floatformat:2 }}
+                    </td>
+
+                </tr>
+
+
+                <tr class="balance-row">
+
+                    <td>Outstanding Balance</td>
+
+                    <td class="amount">
+                        {{ current_balance|floatformat:2 }}
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+        {% if payment.notes %}
+
+            <div class="detail-box" style="margin-top: 20px;">
+
+                <strong>Payment Notes:</strong>
+
+                {{ payment.notes }}
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="status">
+
+            Payment Status: {{ invoice.status }}
+
+        </div>
+
+
+        <div class="footer">
+
+            <p>Thank you for choosing Eden Clinic and Pharmacy.</p>
+
+            <p>This receipt was generated by the Clinic Management System.</p>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <a
+                href="{% url 'payment_record_list' %}"
+                class="back-button"
+            >
+                Back to Payment Records
+            </a>
+
+
+            <button
+                type="button"
+                onclick="window.print()"
+                class="print-button"
+            >
+                Print Receipt
+            </button>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

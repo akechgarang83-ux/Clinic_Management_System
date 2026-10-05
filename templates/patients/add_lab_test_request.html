@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Laboratory Test Request</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .save-button,
+        .cancel-button {
+            display: inline-block;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .save-button {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .cancel-button {
+            background-color: #6c757d;
+            color: white;
+            margin-left: 8px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Add Laboratory Test Request
+        </h1>
+
+        <p class="description">
+            Create a laboratory test request for a patient.
+        </p>
+
+        {% if error %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label for="patient">
+                    Patient
+                </label>
+
+                <select
+                    name="patient"
+                    id="patient"
+                    required
+                >
+
+                    <option value="">
+                        Select Patient
+                    </option>
+
+                    {% for patient in patients %}
+
+                        <option value="{{ patient.id }}">
+
+                            {{ patient.first_name }}
+                            {{ patient.last_name }}
+                            -
+                            {{ patient.patient_number }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="consultation">
+                    Consultation
+                </label>
+
+                <select
+                    name="consultation"
+                    id="consultation"
+                >
+
+                    <option value="">
+                        Select Consultation (Optional)
+                    </option>
+
+                    {% for consultation in consultations %}
+
+                        <option value="{{ consultation.id }}">
+
+                            {{ consultation.patient.first_name }}
+                            {{ consultation.patient.last_name }}
+                            -
+                            {{ consultation.consultation_date }}
+                            -
+                            {{ consultation.chief_complaint|truncatechars:50 }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="test_category">
+                    Test Category
+                </label>
+
+                <select
+                    name="test_category"
+                    id="test_category"
+                >
+
+                    <option value="">
+                        Select Test Category (Optional)
+                    </option>
+
+                    {% for category in categories %}
+
+                        <option value="{{ category.id }}">
+
+                            {{ category.name }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="test_name">
+                    Laboratory Test Name
+                </label>
+
+                <input
+                    type="text"
+                    name="test_name"
+                    id="test_name"
+                    placeholder="Example: Complete Blood Count"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="clinical_notes">
+                    Clinical Notes
+                </label>
+
+                <textarea
+                    name="clinical_notes"
+                    id="clinical_notes"
+                    placeholder="Enter relevant clinical information or reason for the test..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="save-button"
+                >
+                    Save Test Request
+                </button>
+
+                <a
+                    href="{% url 'lab_test_request_list' %}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

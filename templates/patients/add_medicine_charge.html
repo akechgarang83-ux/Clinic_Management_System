@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Medicine Charge | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .description {
+            color: #666666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .help-text {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #777777;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button,
+        .btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .calculation {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .calculation strong {
+            font-size: 18px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Add Medicine Charge</h1>
+
+        <p class="description">
+            Record the charge for medicine dispensed to a patient.
+        </p>
+
+        {% if error %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="patient">
+                    Patient
+                </label>
+
+                <select
+                    name="patient"
+                    id="patient"
+                    required
+                >
+
+                    <option value="">
+                        -- Select Patient --
+                    </option>
+
+                    {% for patient in patients %}
+
+                        <option value="{{ patient.id }}">
+
+                            {{ patient.patient_number }}
+                            -
+                            {{ patient.first_name }}
+                            {{ patient.last_name }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="dispensing">
+                    Medicine Dispensing
+                </label>
+
+                <select
+                    name="dispensing"
+                    id="dispensing"
+                >
+
+                    <option value="">
+                        -- Optional: Select Dispensing Record --
+                    </option>
+
+                    {% for dispensing in dispensings %}
+
+                        <option value="{{ dispensing.id }}">
+
+                            {{ dispensing.patient.first_name }}
+                            {{ dispensing.patient.last_name }}
+                            -
+                            {{ dispensing.inventory.medicine.name }}
+                            -
+                            Quantity:
+                            {{ dispensing.quantity_dispensed }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <div class="help-text">
+                    You may link this charge to an existing medicine dispensing record.
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="medicine_name">
+                    Medicine Name
+                </label>
+
+                <input
+                    type="text"
+                    name="medicine_name"
+                    id="medicine_name"
+                    placeholder="Enter medicine name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="quantity">
+                    Quantity
+                </label>
+
+                <input
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    value="1"
+                    min="1"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="unit_price">
+                    Unit Price
+                </label>
+
+                <input
+                    type="number"
+                    name="unit_price"
+                    id="unit_price"
+                    value="0"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <div class="calculation">
+
+                Total Charge:
+
+                <strong>
+                    <span id="total_charge">0.00</span>
+                </strong>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    id="description"
+                    placeholder="Enter any additional information..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button type="submit">
+                    Save Medicine Charge
+                </button>
+
+                <a
+                    href="{% url 'medicine_charge_list' %}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const quantityInput =
+        document.getElementById('quantity');
+
+    const unitPriceInput =
+        document.getElementById('unit_price');
+
+    const totalCharge =
+        document.getElementById('total_charge');
+
+
+    function calculateTotal() {
+
+        const quantity =
+            parseFloat(quantityInput.value) || 0;
+
+        const unitPrice =
+            parseFloat(unitPriceInput.value) || 0;
+
+        const total =
+            quantity * unitPrice;
+
+        totalCharge.textContent =
+            total.toFixed(2);
+    }
+
+
+    quantityInput.addEventListener(
+        'input',
+        calculateTotal
+    );
+
+
+    unitPriceInput.addEventListener(
+        'input',
+        calculateTotal
+    );
+
+
+    calculateTotal();
+
+</script>
+
+</body>
+</html>

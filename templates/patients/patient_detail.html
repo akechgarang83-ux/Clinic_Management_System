@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Patient Details | Clinic Management System
+    </title>
+
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+
+        .container {
+            width: 1000px;
+            max-width: 92%;
+            margin: 40px auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+
+        /* =========================
+           PATIENT INFORMATION
+        ========================= */
+
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+
+        .info-item {
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+
+        /* =========================
+           SECTIONS
+        ========================= */
+
+        .section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+
+        .section-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .add-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+
+        .add-btn:hover {
+            background-color: #0056b3;
+        }
+
+
+        .appointment-btn {
+            background-color: #198754;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+
+        .appointment-btn:hover {
+            background-color: #146c43;
+        }
+
+
+        .consultation-btn {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+
+        .consultation-btn:hover {
+            background-color: #59359a;
+        }
+
+
+        .prescription-btn {
+            background-color: #fd7e14;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+
+        .prescription-btn:hover {
+            background-color: #dc6502;
+        }
+
+
+        .back-btn {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+
+        .back-btn:hover {
+            background-color: #545b62;
+        }
+
+
+        /* =========================
+           RECORDS
+        ========================= */
+
+        .record {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+
+        .record:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .record-date {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+
+        .record-item {
+            margin-bottom: 12px;
+        }
+
+
+        .record-item strong {
+            color: #333;
+        }
+
+
+        /* =========================
+           APPOINTMENTS
+        ========================= */
+
+        .appointment {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+
+        .appointment:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .appointment-date {
+            font-weight: bold;
+            color: #198754;
+            margin-bottom: 12px;
+        }
+
+
+        .appointment-item {
+            margin-bottom: 10px;
+        }
+
+
+        .appointment-item strong {
+            color: #333;
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+
+        .status-scheduled {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+
+        .status-confirmed {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+
+        .status-completed {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+
+        .status-rescheduled {
+            background-color: #e2e3e5;
+            color: #41464b;
+        }
+
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+
+        .status-dispensed {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+
+        .status-active {
+            color: #198754;
+            font-weight: bold;
+        }
+
+
+        .status-inactive {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           EMPTY RECORDS
+        ========================= */
+
+        .no-records {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .patient-info {
+                grid-template-columns: 1fr;
+            }
+
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+
+            .button-group {
+                width: 100%;
+            }
+
+
+            .button-group a {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================
+         BACK TO PATIENT LIST
+    ========================= -->
+
+    <a
+        href="{% url 'patient_list' %}"
+        class="back-btn"
+    >
+        ← Back to Patient List
+    </a>
+
+
+
+    <!-- =========================
+         PATIENT INFORMATION
+    ========================= -->
+
+    <div class="header">
+
+        <h1>
+            Patient Details
+        </h1>
+
+
+        <div class="patient-info">
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Patient Number:
+                </span>
+
+                {{ patient.patient_number }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Name:
+                </span>
+
+                {{ patient.first_name }}
+                {{ patient.last_name }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Date of Birth:
+                </span>
+
+                {{ patient.date_of_birth }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Gender:
+                </span>
+
+                {{ patient.gender }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Phone:
+                </span>
+
+                {{ patient.phone }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Address:
+                </span>
+
+                {{ patient.address }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Emergency Contact:
+                </span>
+
+                {{ patient.emergency_contact|default:"Not provided" }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Emergency Phone:
+                </span>
+
+                {{ patient.emergency_phone|default:"Not provided" }}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Status:
+                </span>
+
+
+                {% if patient.status == "Active" %}
+
+                    <span class="status-active">
+                        {{ patient.status }}
+                    </span>
+
+                {% else %}
+
+                    <span class="status-inactive">
+                        {{ patient.status }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Registration Date:
+                </span>
+
+                {{ patient.registration_date }}
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         APPOINTMENTS
+    ========================= -->
+
+    <div class="section">
+
+
+        <div class="section-header">
+
+            <h2>
+                Appointments
+            </h2>
+
+
+            <div class="button-group">
+
+                <a
+                    href="{% url 'book_appointment' patient.id %}"
+                    class="appointment-btn"
+                >
+                    + Book Appointment
+                </a>
+
+
+                <a
+                    href="{% url 'add_consultation' patient.id %}"
+                    class="consultation-btn"
+                >
+                    + Add Consultation
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        {% if appointments %}
+
+
+            {% for appointment in appointments %}
+
+
+                <div class="appointment">
+
+
+                    <div class="appointment-date">
+
+                        Appointment:
+                        {{ appointment.appointment_date }}
+
+                        at
+
+                        {{ appointment.appointment_time }}
+
+                    </div>
+
+
+
+                    <div class="appointment-item">
+
+                        <strong>
+                            Doctor:
+                        </strong>
+
+
+                        {% if appointment.doctor %}
+
+
+                            {% if appointment.doctor.get_full_name %}
+
+                                {{ appointment.doctor.get_full_name }}
+
+                            {% else %}
+
+                                {{ appointment.doctor.username }}
+
+                            {% endif %}
+
+
+                        {% else %}
+
+                            Not assigned
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <div class="appointment-item">
+
+                        <strong>
+                            Status:
+                        </strong>
+
+
+                        {% if appointment.status == "Scheduled" %}
+
+                            <span class="status status-scheduled">
+                                {{ appointment.status }}
+                            </span>
+
+
+                        {% elif appointment.status == "Confirmed" %}
+
+                            <span class="status status-confirmed">
+                                {{ appointment.status }}
+                            </span>
+
+
+                        {% elif appointment.status == "Completed" %}
+
+                            <span class="status status-completed">
+                                {{ appointment.status }}
+                            </span>
+
+
+                        {% elif appointment.status == "Cancelled" %}
+
+                            <span class="status status-cancelled">
+                                {{ appointment.status }}
+                            </span>
+
+
+                        {% elif appointment.status == "Rescheduled" %}
+
+                            <span class="status status-rescheduled">
+                                {{ appointment.status }}
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ appointment.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    {% if appointment.reason %}
+
+                        <div class="appointment-item">
+
+                            <strong>
+                                Reason:
+                            </strong>
+
+                            <br>
+
+                            {{ appointment.reason }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    {% if appointment.notes %}
+
+                        <div class="appointment-item">
+
+                            <strong>
+                                Notes:
+                            </strong>
+
+                            <br>
+
+                            {{ appointment.notes }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="no-records">
+
+                No appointments have been booked
+                for this patient yet.
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- =========================
+         CONSULTATIONS
+    ========================= -->
+
+    <div class="section">
+
+
+        <div class="section-header">
+
+            <h2>
+                Consultations
+            </h2>
+
+
+            <div class="button-group">
+
+                <a
+                    href="{% url 'add_consultation' patient.id %}"
+                    class="consultation-btn"
+                >
+                    + Add Consultation
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        {% if consultations %}
+
+
+            {% for consultation in consultations %}
+
+
+                <div class="record">
+
+
+                    <!-- CONSULTATION DATE -->
+
+                    <div class="record-date">
+
+                        Consultation Date:
+
+                        {{ consultation.consultation_date }}
+
+                        at
+
+                        {{ consultation.consultation_time }}
+
+                    </div>
+
+
+
+                    <!-- DOCTOR -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Doctor:
+                        </strong>
+
+
+                        {% if consultation.doctor %}
+
+
+                            {% if consultation.doctor.get_full_name %}
+
+                                {{ consultation.doctor.get_full_name }}
+
+                            {% else %}
+
+                                {{ consultation.doctor.username }}
+
+                            {% endif %}
+
+
+                        {% else %}
+
+                            Not assigned
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- CHIEF COMPLAINT -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Chief Complaint:
+                        </strong>
+
+                        <br>
+
+                        {{ consultation.chief_complaint }}
+
+                    </div>
+
+
+
+                    <!-- VITAL SIGNS -->
+
+                    {% if consultation.vital_signs %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Vital Signs:
+                            </strong>
+
+                            <br>
+
+                            {{ consultation.vital_signs|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- SYMPTOMS -->
+
+                    {% if consultation.symptoms %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Symptoms:
+                            </strong>
+
+                            <br>
+
+                            {{ consultation.symptoms|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- DIAGNOSIS -->
+
+                    {% if consultation.diagnosis %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Diagnosis:
+                            </strong>
+
+                            <br>
+
+                            {{ consultation.diagnosis|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- DOCTOR NOTES -->
+
+                    {% if consultation.doctor_notes %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Doctor's Notes:
+                            </strong>
+
+                            <br>
+
+                            {{ consultation.doctor_notes|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- TREATMENT PLAN -->
+
+                    {% if consultation.treatment_plan %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Treatment Plan:
+                            </strong>
+
+                            <br>
+
+                            {{ consultation.treatment_plan|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- FOLLOW-UP -->
+
+                    {% if consultation.follow_up %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Follow-up:
+                            </strong>
+
+                            <br>
+
+                            {{ consultation.follow_up|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="no-records">
+
+                No consultations have been added
+                for this patient yet.
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- =========================
+         PRESCRIPTIONS
+    ========================= -->
+
+    <div class="section">
+
+
+        <div class="section-header">
+
+            <h2>
+                Prescriptions
+            </h2>
+
+
+            <div class="button-group">
+
+                <a
+                    href="{% url 'add_prescription' patient.id %}"
+                    class="prescription-btn"
+                >
+                    + Add Prescription
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        {% if prescriptions %}
+
+
+            {% for prescription in prescriptions %}
+
+
+                <div class="record">
+
+
+                    <!-- PRESCRIPTION DATE -->
+
+                    <div class="record-date">
+
+                        Prescription Date:
+
+                        {{ prescription.prescription_date }}
+
+                    </div>
+
+
+
+                    <!-- DOCTOR -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Doctor:
+                        </strong>
+
+
+                        {% if prescription.doctor %}
+
+
+                            {% if prescription.doctor.get_full_name %}
+
+                                {{ prescription.doctor.get_full_name }}
+
+                            {% else %}
+
+                                {{ prescription.doctor.username }}
+
+                            {% endif %}
+
+
+                        {% else %}
+
+                            Not assigned
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- CONSULTATION -->
+
+                    {% if prescription.consultation %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Consultation:
+                            </strong>
+
+                            {{ prescription.consultation.consultation_date }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- MEDICINE -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Medicine:
+                        </strong>
+
+                        {{ prescription.medicine_name }}
+
+                    </div>
+
+
+
+                    <!-- DOSAGE -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Dosage:
+                        </strong>
+
+                        {{ prescription.dosage }}
+
+                    </div>
+
+
+
+                    <!-- FREQUENCY -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Frequency:
+                        </strong>
+
+                        {{ prescription.frequency }}
+
+                    </div>
+
+
+
+                    <!-- DURATION -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Duration:
+                        </strong>
+
+                        {{ prescription.duration }}
+
+                    </div>
+
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Quantity:
+                        </strong>
+
+                        {{ prescription.quantity }}
+
+                    </div>
+
+
+
+                    <!-- INSTRUCTIONS -->
+
+                    {% if prescription.instructions %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Instructions:
+                            </strong>
+
+                            <br>
+
+                            {{ prescription.instructions|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- STATUS -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Status:
+                        </strong>
+
+
+                        {% if prescription.status == "Pending" %}
+
+                            <span class="status status-pending">
+                                {{ prescription.status }}
+                            </span>
+
+
+                        {% elif prescription.status == "Dispensed" %}
+
+                            <span class="status status-dispensed">
+                                {{ prescription.status }}
+                            </span>
+
+
+                        {% elif prescription.status == "Cancelled" %}
+
+                            <span class="status status-cancelled">
+                                {{ prescription.status }}
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ prescription.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="no-records">
+
+                No prescriptions have been added
+                for this patient yet.
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- =========================
+         MEDICAL HISTORY
+    ========================= -->
+
+    <div class="section">
+
+
+        <div class="section-header">
+
+            <h2>
+                Medical History
+            </h2>
+
+
+            <div class="button-group">
+
+                <a
+                    href="{% url 'add_medical_record' patient.id %}"
+                    class="add-btn"
+                >
+                    + Add Medical Record
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        {% if medical_records %}
+
+
+            {% for record in medical_records %}
+
+
+                <div class="record">
+
+
+                    <!-- VISIT DATE -->
+
+                    <div class="record-date">
+
+                        Visit Date:
+
+                        {{ record.visit_date }}
+
+                    </div>
+
+
+
+                    <!-- SYMPTOMS -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Symptoms / Complaints:
+                        </strong>
+
+                        <br>
+
+                        {{ record.symptoms }}
+
+                    </div>
+
+
+
+                    <!-- DIAGNOSIS -->
+
+                    <div class="record-item">
+
+                        <strong>
+                            Diagnosis:
+                        </strong>
+
+                        <br>
+
+                        {{ record.diagnosis }}
+
+                    </div>
+
+
+
+                    <!-- TREATMENT -->
+
+                    {% if record.treatment %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Treatment:
+                            </strong>
+
+                            <br>
+
+                            {{ record.treatment }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- PRESCRIPTION -->
+
+                    {% if record.prescription %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Prescription:
+                            </strong>
+
+                            <br>
+
+                            {{ record.prescription }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- DOCTOR NOTES -->
+
+                    {% if record.doctor_notes %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Doctor's Notes:
+                            </strong>
+
+                            <br>
+
+                            {{ record.doctor_notes }}
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <!-- FOLLOW-UP -->
+
+                    {% if record.follow_up %}
+
+                        <div class="record-item">
+
+                            <strong>
+                                Follow-up:
+                            </strong>
+
+                            <br>
+
+                            {{ record.follow_up }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="no-records">
+
+                No medical records have been added
+                for this patient yet.
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

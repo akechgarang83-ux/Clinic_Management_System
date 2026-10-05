@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Add Prescription | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .patient-info {
+            background-color: #eaf2f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .patient-info strong {
+            color: #2c3e50;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .help-text {
+            color: #777;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .button-group {
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-button {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .save-button:hover {
+            background-color: #219150;
+        }
+
+        .cancel-button {
+            background-color: #7f8c8d;
+            color: white;
+        }
+
+        .cancel-button:hover {
+            background-color: #6c7778;
+        }
+
+        @media (max-width: 600px) {
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .button {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Add Prescription
+    </h1>
+
+    <p class="subtitle">
+        Clinic Management System — Pharmacy & Prescription Management
+    </p>
+
+
+    <!-- PATIENT INFORMATION -->
+
+    <div class="patient-info">
+
+        <strong>Patient:</strong>
+
+        {{ patient.first_name }}
+        {{ patient.last_name }}
+
+        <br>
+
+        <strong>Patient Number:</strong>
+
+        {{ patient.patient_number }}
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <div class="form-container">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- CONSULTATION INFORMATION -->
+
+            <h2 class="section-title">
+                Prescription Information
+            </h2>
+
+
+            <!-- DOCTOR -->
+
+            <div class="form-group">
+
+                <label for="doctor">
+
+                    Doctor
+                    <span class="required">*</span>
+
+                </label>
+
+                <select
+                    id="doctor"
+                    name="doctor"
+                    required
+                >
+
+                    <option value="">
+                        Select Doctor
+                    </option>
+
+                    {% for doctor in doctors %}
+
+                        <option value="{{ doctor.id }}">
+
+                            {% if doctor.get_full_name %}
+
+                                {{ doctor.get_full_name }}
+
+                            {% else %}
+
+                                {{ doctor.username }}
+
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- CONSULTATION -->
+
+            <div class="form-group">
+
+                <label for="consultation">
+                    Consultation
+                </label>
+
+                <select
+                    id="consultation"
+                    name="consultation"
+                >
+
+                    <option value="">
+                        Select Consultation
+                    </option>
+
+                    {% for consultation in consultations %}
+
+                        <option value="{{ consultation.id }}">
+
+                            {{ consultation.consultation_date }}
+
+                            -
+
+                            {{ consultation.chief_complaint|truncatechars:60 }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <div class="help-text">
+                    Select the consultation associated with this prescription.
+                </div>
+
+            </div>
+
+
+            <!-- MEDICINE -->
+
+            <h2 class="section-title">
+                Medicine Details
+            </h2>
+
+
+            <div class="form-group">
+
+                <label for="medicine_name">
+
+                    Medicine Name
+                    <span class="required">*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="medicine_name"
+                    name="medicine_name"
+                    placeholder="Enter medicine name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DOSAGE -->
+
+            <div class="form-group">
+
+                <label for="dosage">
+
+                    Dosage
+                    <span class="required">*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="dosage"
+                    name="dosage"
+                    placeholder="Example: 500 mg"
+                    required
+                >
+
+            </div>
+
+
+            <!-- FREQUENCY -->
+
+            <div class="form-group">
+
+                <label for="frequency">
+
+                    Frequency
+                    <span class="required">*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="frequency"
+                    name="frequency"
+                    placeholder="Example: Twice daily"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DURATION -->
+
+            <div class="form-group">
+
+                <label for="duration">
+
+                    Duration
+                    <span class="required">*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="duration"
+                    name="duration"
+                    placeholder="Example: 5 days"
+                    required
+                >
+
+            </div>
+
+
+            <!-- QUANTITY -->
+
+            <div class="form-group">
+
+                <label for="quantity">
+
+                    Quantity
+                    <span class="required">*</span>
+
+                </label>
+
+                <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    value="1"
+                    required
+                >
+
+            </div>
+
+
+            <!-- INSTRUCTIONS -->
+
+            <div class="form-group">
+
+                <label for="instructions">
+                    Instructions
+                </label>
+
+                <textarea
+                    id="instructions"
+                    name="instructions"
+                    placeholder="Enter instructions for taking the medicine..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="button save-button"
+                >
+                    Save Prescription
+                </button>
+
+
+                <a
+                    href="{% url 'patient_detail' patient.id %}"
+                    class="button cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

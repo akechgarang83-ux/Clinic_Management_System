@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicine Dispensing History | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #333333;
+        }
+
+        .header p {
+            margin: 0;
+            color: #666666;
+        }
+
+        .actions {
+            margin-top: 15px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 8px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .search-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-box form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-button {
+            padding: 10px 18px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eeeeee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333333;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777777;
+            padding: 30px;
+        }
+
+        .quantity {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Medicine Dispensing History</h1>
+
+        <p>
+            View all medicine dispensing transactions.
+        </p>
+
+        <div class="actions">
+
+            <a
+                href="{% url 'add_medicine_dispensing' %}"
+                class="button"
+            >
+                + Dispense Medicine
+            </a>
+
+            <a
+                href="{% url 'medicine_inventory_list' %}"
+                class="button"
+            >
+                Medicine Inventory
+            </a>
+
+            <a
+                href="{% url 'prescription_list' %}"
+                class="button"
+            >
+                Prescriptions
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="search-box">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search patient, medicine or batch"
+                value="{{ search }}"
+            >
+
+            <button
+                type="submit"
+                class="search-button"
+            >
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Patient</th>
+                    <th>Medicine</th>
+                    <th>Batch Number</th>
+                    <th>Prescription</th>
+                    <th>Quantity</th>
+                    <th>Dispensed By</th>
+                    <th>Date</th>
+                    <th>Notes</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for dispensing in dispensings %}
+
+                <tr>
+
+                    <td>
+
+                        {{ dispensing.patient.first_name }}
+                        {{ dispensing.patient.last_name }}
+
+                    </td>
+
+                    <td>
+                        {{ dispensing.inventory.medicine.name }}
+                    </td>
+
+                    <td>
+                        {{ dispensing.inventory.batch_number }}
+                    </td>
+
+                    <td>
+
+                        {% if dispensing.prescription %}
+
+                            {{ dispensing.prescription.medicine_name }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                    <td class="quantity">
+                        {{ dispensing.quantity_dispensed }}
+                    </td>
+
+                    <td>
+
+                        {% if dispensing.dispensed_by %}
+
+                            {{ dispensing.dispensed_by.get_full_name|default:dispensing.dispensed_by.username }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ dispensing.dispensing_date|date:"Y-m-d H:i" }}
+                    </td>
+
+                    <td>
+                        {{ dispensing.notes|default:"-" }}
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        class="empty"
+                    >
+                        No medicine dispensing records found.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

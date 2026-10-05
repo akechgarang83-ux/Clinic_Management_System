@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .header {
+            background-color: #0077b6;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+        .navigation-card,
+        .patient-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #023e8a;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+        }
+
+        .menu-card {
+            background-color: #f8fbfd;
+            border: 1px solid #d9e9ef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .menu-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .menu-card h3 {
+            color: #023e8a;
+            margin: 8px 0;
+            font-size: 17px;
+        }
+
+        .menu-card p {
+            color: #666;
+            font-size: 13px;
+            min-height: 36px;
+        }
+
+        .menu-button {
+            display: inline-block;
+            padding: 9px 15px;
+            background-color: #0077b6;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .menu-button:hover {
+            background-color: #023e8a;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .search-form input {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button,
+        .register-button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .register-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .register-button:hover {
+            background-color: #218838;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 1100px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #023e8a;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        td a {
+            color: #0077b6;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        .status-active {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            margin-top: 30px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .register-button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Clinic Management System</h1>
+        <p>Eden Clinic and Pharmacy</p>
+    </div>
+
+
+    <div class="container">
+
+        <!-- MAIN NAVIGATION -->
+        <div class="navigation-card">
+
+            <h2 class="section-title">
+                Main System Modules
+            </h2>
+
+            <div class="menu-grid">
+
+                <!-- PATIENTS -->
+                <div class="menu-card">
+                    <div class="menu-icon">👤</div>
+
+                    <h3>Patients</h3>
+
+                    <p>
+                        Register and manage patient information.
+                    </p>
+
+                    <a href="{% url 'patient_management' %}" class="menu-button">
+    Open Patients
+</a>
+                </div>
+
+
+                <!-- APPOINTMENTS -->
+                <div class="menu-card">
+                    <div class="menu-icon">📅</div>
+
+                    <h3>Appointments</h3>
+
+                    <p>
+                        Book, manage and track appointments.
+                    </p>
+
+                    <a href="{% url 'appointment_list' %}" class="menu-button">
+                        Open Appointments
+                    </a>
+                </div>
+
+
+                <!-- APPOINTMENT CALENDAR -->
+                <div class="menu-card">
+                    <div class="menu-icon">🗓️</div>
+
+                    <h3>Appointment Calendar</h3>
+
+                    <p>
+                        View scheduled appointments on a calendar.
+                    </p>
+
+                    <a href="{% url 'appointment_calendar' %}" class="menu-button">
+                        Open Calendar
+                    </a>
+                </div>
+
+
+                <!-- DOCTOR AVAILABILITY -->
+                <div class="menu-card">
+                    <div class="menu-icon">👨‍⚕️</div>
+
+                    <h3>Doctor Availability</h3>
+
+                    <p>
+                        Manage doctor working days and hours.
+                    </p>
+
+                    <a href="{% url 'doctor_availability' %}" class="menu-button">
+                        Open Availability
+                    </a>
+                </div>
+
+
+                <!-- CONSULTATIONS -->
+<div class="menu-card">
+    <div class="menu-icon">🩺</div>
+
+    <h3>Consultations</h3>
+
+    <p>
+        Record patient consultations and diagnoses.
+    </p>
+
+    <a
+        href="{% url 'consultation_list' %}"
+        class="menu-button"
+    >
+        Open Consultations
+    </a>
+</div>
+
+
+                <!-- PRESCRIPTIONS -->
+                <div class="menu-card">
+                    <div class="menu-icon">💊</div>
+
+                    <h3>Prescriptions</h3>
+
+                    <p>
+                        Create and manage patient prescriptions.
+                    </p>
+
+                    <a href="{% url 'prescription_list' %}" class="menu-button">
+                        Open Prescriptions
+                    </a>
+                </div>
+
+
+                <!-- MEDICINES -->
+                <div class="menu-card">
+                    <div class="menu-icon">💉</div>
+
+                    <h3>Medicines</h3>
+
+                    <p>
+                        Manage medicines and medicine information.
+                    </p>
+
+                    <a href="{% url 'medicine_list' %}" class="menu-button">
+                        Open Medicines
+                    </a>
+                </div>
+
+
+                <!-- MEDICINE INVENTORY -->
+                <div class="menu-card">
+                    <div class="menu-icon">📦</div>
+
+                    <h3>Medicine Inventory</h3>
+
+                    <p>
+                        Monitor medicine stock and expiry dates.
+                    </p>
+
+                    <a href="{% url 'medicine_inventory_list' %}" class="menu-button">
+                        Open Inventory
+                    </a>
+                </div>
+
+
+                <!-- MEDICINE DISPENSING -->
+                <div class="menu-card">
+                    <div class="menu-icon">🏥</div>
+
+                    <h3>Medicine Dispensing</h3>
+
+                    <p>
+                        Record medicines dispensed to patients.
+                    </p>
+
+                    <a href="{% url 'medicine_dispensing_list' %}" class="menu-button">
+                        Open Dispensing
+                    </a>
+                </div>
+
+
+                <!-- LABORATORY -->
+                <div class="menu-card">
+                    <div class="menu-icon">🔬</div>
+
+                    <h3>Laboratory</h3>
+
+                    <p>
+                        Manage laboratory requests, tests and results.
+                    </p>
+
+                    <a href="{% url 'lab_test_request_list' %}" class="menu-button">
+                        Open Laboratory
+                    </a>
+                </div>
+
+
+                <!-- BILLING -->
+                <div class="menu-card">
+                    <div class="menu-icon">🧾</div>
+
+                    <h3>Billing</h3>
+
+                    <p>
+                        Manage invoices, charges and patient billing.
+                    </p>
+
+                    <a href="{% url 'invoice_list' %}" class="menu-button">
+                        Open Billing
+                    </a>
+                </div>
+
+
+                <!-- PAYMENTS -->
+                <div class="menu-card">
+                    <div class="menu-icon">💰</div>
+
+                    <h3>Payments</h3>
+
+                    <p>
+                        Record and manage patient payments.
+                    </p>
+
+                    <a href="{% url 'payment_record_list' %}" class="menu-button">
+                        Open Payments
+                    </a>
+                </div>
+
+
+                <!-- REPORTS -->
+                <div class="menu-card">
+                    <div class="menu-icon">📊</div>
+
+                    <h3>Reports</h3>
+
+                    <p>
+                        View clinic reports and management information.
+                    </p>
+
+                    <a href="{% url 'reports_dashboard' %}" class="menu-button">
+                        Open Reports
+                    </a>
+                </div>
+
+
+                <!-- ADMINISTRATION -->
+                <div class="menu-card">
+                    <div class="menu-icon">⚙️</div>
+
+                    <h3>Administration</h3>
+
+                    <p>
+                        Manage system administration and settings.
+                    </p>
+
+                    <a href="{% url 'administration_dashboard' %}" class="menu-button">
+                        Open Administration
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- PATIENT MANAGEMENT -->
+        <div class="patient-card">
+
+            <div class="top-bar">
+
+                <!-- SEARCH -->
+                <form method="GET" class="search-form">
+
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search patient by name, patient number or phone..."
+                        value="{{ request.GET.search }}"
+                    >
+
+                    <button type="submit">
+                        Search
+                    </button>
+
+                </form>
+
+
+                <!-- REGISTER PATIENT -->
+                <a
+                    href="{% url 'register_patient' %}"
+                    class="register-button"
+                >
+                    + Register New Patient
+                </a>
+
+            </div>
+
+
+            <h2 class="section-title">
+                Patient Management
+            </h2>
+
+
+            <!-- PATIENT TABLE -->
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Patient Number</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Date of Birth</th>
+                            <th>Gender</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Registration Date</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for patient in patients %}
+
+                        <tr>
+
+                            <td>
+                                {{ patient.patient_number }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.first_name }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.last_name }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.date_of_birth }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.gender }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.phone }}
+                            </td>
+
+
+                            <td>
+                                {{ patient.address }}
+                            </td>
+
+
+                            <td>
+
+                                {% if patient.status == "Active" %}
+
+                                    <span class="status-active">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-inactive">
+                                        Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ patient.registration_date|date:"Y-m-d H:i" }}
+                            </td>
+
+
+                            <td>
+
+                                <a
+                                    href="{% url 'patient_detail' patient.id %}"
+                                >
+                                    View
+                                </a>
+
+
+                                <a
+                                    href="{% url 'edit_patient' patient.id %}"
+                                >
+                                    Edit
+                                </a>
+
+
+                                <a
+                                    href="{% url 'delete_patient' patient.id %}"
+                                >
+                                    Delete
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="10"
+                                class="empty-message"
+                            >
+                                No patients found.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="footer">
+
+        <p>
+            Clinic Management System |
+            Eden Clinic and Pharmacy
+        </p>
+
+        <p>
+            Patient Management Module
+        </p>
+
+    </div>
+
+</body>
+
+</html>

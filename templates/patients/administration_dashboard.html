@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Administration Dashboard | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .header {
+            background-color: #0077b6;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .section-title {
+            color: #023e8a;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(250px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .icon {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            color: #023e8a;
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 45px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 18px;
+            background-color: #0077b6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background-color: #023e8a;
+        }
+
+        .back-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 11px 22px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .back-button:hover {
+            background-color: #545b62;
+        }
+
+        .footer {
+            margin-top: 40px;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <h1>
+            Administration Dashboard
+        </h1>
+
+        <p>
+            Clinic Management System
+        </p>
+
+    </div>
+
+
+    <div class="container">
+
+        <!-- System User Statistics -->
+
+        <h2 class="section-title">
+            📈 System User Statistics
+        </h2>
+
+        <div class="card-grid">
+
+            <div class="card">
+
+                <div class="icon">
+                    👥
+                </div>
+
+                <h3>
+                    Total Users
+                </h3>
+
+                <p>
+                    Total number of users registered in the
+                    clinic management system.
+                </p>
+
+                <strong
+                    style="
+                        font-size: 28px;
+                        color: #0077b6;
+                    "
+                >
+                    {{ total_users }}
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    🟢
+                </div>
+
+                <h3>
+                    Active Users
+                </h3>
+
+                <p>
+                    Number of users who are currently active
+                    in the system.
+                </p>
+
+                <strong
+                    style="
+                        font-size: 28px;
+                        color: #198754;
+                    "
+                >
+                    {{ active_users }}
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    👨‍💼
+                </div>
+
+                <h3>
+                    Staff Users
+                </h3>
+
+                <p>
+                    Number of users with staff access
+                    to the system.
+                </p>
+
+                <strong
+                    style="
+                        font-size: 28px;
+                        color: #6f42c1;
+                    "
+                >
+                    {{ staff_users }}
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    🔑
+                </div>
+
+                <h3>
+                    Superusers
+                </h3>
+
+                <p>
+                    Number of users with full Django
+                    administrative privileges.
+                </p>
+
+                <strong
+                    style="
+                        font-size: 28px;
+                        color: #dc3545;
+                    "
+                >
+                    {{ superusers }}
+                </strong>
+
+            </div>
+
+        </div>
+<!-- User Role Statistics -->
+
+<h2 class="section-title">
+    👨‍💼 User Role Statistics
+</h2>
+
+<div class="card-grid">
+
+    <div class="card">
+
+        <div class="icon">
+            🛡️
+        </div>
+
+        <h3>
+            Administrators
+        </h3>
+
+        <p>
+            Users assigned the Administrator role.
+        </p>
+
+        <strong
+            style="
+                font-size: 28px;
+                color: #dc3545;
+            "
+        >
+            {{ role_counts.Administrator }}
+        </strong>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="icon">
+            👨‍⚕️
+        </div>
+
+        <h3>
+            Doctors
+        </h3>
+
+        <p>
+            Users assigned the Doctor role.
+        </p>
+
+        <strong
+            style="
+                font-size: 28px;
+                color: #0077b6;
+            "
+        >
+            {{ role_counts.Doctor }}
+        </strong>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="icon">
+            👩‍⚕️
+        </div>
+
+        <h3>
+            Nurses
+        </h3>
+
+        <p>
+            Users assigned the Nurse role.
+        </p>
+
+        <strong
+            style="
+                font-size: 28px;
+                color: #198754;
+            "
+        >
+            {{ role_counts.Nurse }}
+        </strong>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="icon">
+            🧾
+        </div>
+
+        <h3>
+            Receptionists
+        </h3>
+
+        <p>
+            Users assigned the Receptionist role.
+        </p>
+
+        <strong
+            style="
+                font-size: 28px;
+                color: #6f42c1;
+            "
+        >
+            {{ role_counts.Receptionist }}
+        </strong>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="icon">
+            💊
+        </div>
+
+        <h3>
+            Pharmacists
+        </h3>
+
+        <p>
+            Users assigned the Pharmacist role.
+        </p>
+
+        <strong
+            style="
+                font-size: 28px;
+                color: #fd7e14;
+            "
+        >
+            {{ role_counts.Pharmacist }}
+        </strong>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="icon">
+            🧪
+        </div>
+
+        <h3>
+            Laboratory Technicians
+        </h3>
+
+        <p>
+            Users assigned the Laboratory Technician role.
+        </p>
+
+        <strong
+            style="
+                font-size: 28px;
+                color: #20c997;
+            "
+        >
+            {{ laboratory_technician_count }}
+        </strong>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="icon">
+            💰
+        </div>
+
+        <h3>
+            Accountants
+        </h3>
+
+        <p>
+            Users assigned the Accountant role.
+        </p>
+
+        <strong
+            style="
+                font-size: 28px;
+                color: #795548;
+            "
+        >
+            {{ role_counts.Accountant }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+
+        <!-- User Management -->
+
+        <h2 class="section-title">
+            👤 User Management
+        </h2>
+
+        <div class="card-grid">
+
+            <div class="card">
+
+                <div class="icon">
+                    👥
+                </div>
+
+                <h3>
+                    User Accounts
+                </h3>
+
+                <p>
+                    Manage clinic system users, staff accounts
+                    and user information.
+                </p>
+
+                <a
+                    href="/admin/auth/user/"
+                    class="button"
+                >
+                    Manage Users
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    🔐
+                </div>
+
+                <h3>
+                    Roles & Access
+                </h3>
+
+                <p>
+                    Manage staff roles and control access
+                    to system functions.
+                </p>
+
+                <a
+                    href="/admin/"
+                    class="button"
+                >
+                    Open Admin
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Clinic Configuration -->
+
+        <h2 class="section-title">
+            ⚙️ Clinic Configuration
+        </h2>
+
+        <div class="card-grid">
+
+            <div class="card">
+
+                <div class="icon">
+                    👨‍⚕️
+                </div>
+
+                <h3>
+                    Doctor Availability
+                </h3>
+
+                <p>
+                    View and manage doctor working days
+                    and available working hours.
+                </p>
+
+                <a
+                    href="{% url 'doctor_availability' %}"
+                    class="button"
+                >
+                    View Availability
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    💊
+                </div>
+
+                <h3>
+                    Medicine Categories
+                </h3>
+
+                <p>
+                    Manage medicine categories used by
+                    the pharmacy module.
+                </p>
+
+                <a
+                    href="/patients/medicine-categories/"
+                    class="button"
+                >
+                    Manage Categories
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    🧪
+                </div>
+
+                <h3>
+                    Laboratory Categories
+                </h3>
+
+                <p>
+                    Manage laboratory test categories
+                    used in the clinic.
+                </p>
+
+                <a
+                    href="{% url 'lab_test_category_list' %}"
+                    class="button"
+                >
+                    Manage Categories
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Reports -->
+
+        <h2 class="section-title">
+            📊 Reports & Records
+        </h2>
+
+        <div class="card-grid">
+
+            <div class="card">
+
+                <div class="icon">
+                    📊
+                </div>
+
+                <h3>
+                    Reports Dashboard
+                </h3>
+
+                <p>
+                    Access patient, clinical, pharmacy,
+                    billing and laboratory reports.
+                </p>
+
+                <a
+                    href="{% url 'reports_dashboard' %}"
+                    class="button"
+                >
+                    Open Reports
+                </a>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    📅
+                </div>
+
+                <h3>
+                    Appointment Calendar
+                </h3>
+
+                <p>
+                    View scheduled appointments and clinic
+                    appointment activities.
+                </p>
+
+                <a
+                    href="/patients/appointments/calendar/"
+                    class="button"
+                >
+                    Open Calendar
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- System Administration -->
+
+        <h2 class="section-title">
+            🛠 System Administration
+        </h2>
+
+        <div class="card-grid">
+
+            <div class="card">
+
+                <div class="icon">
+                    ⚙️
+                </div>
+
+                <h3>
+                    Django Administration
+                </h3>
+
+                <p>
+                    Access the main administrative interface
+                    for managing system data.
+                </p>
+
+                <a
+                    href="/admin/"
+                    class="button"
+                >
+                    Open Admin Panel
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Back Button -->
+
+        <div class="back-section">
+
+            <a
+                href="/patients/"
+                class="back-button"
+            >
+                ← Back to Patient Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Footer -->
+
+    <div class="footer">
+
+        Clinic Management System
+        &copy; 2026
+
+    </div>
+
+</body>
+</html>
+

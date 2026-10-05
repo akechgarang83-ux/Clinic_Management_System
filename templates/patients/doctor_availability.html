@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Doctor Availability | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .top-actions {
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 16px;
+            margin-right: 8px;
+            text-decoration: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 6px;
+            overflow-x: auto;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .available {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .unavailable {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        @media (max-width: 700px) {
+            th,
+            td {
+                padding: 9px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Doctor Availability</h1>
+
+    <p class="subtitle">
+        Clinic Management System — Appointment Management
+    </p>
+
+    <div class="top-actions">
+
+        <a href="{% url 'appointment_list' %}" class="button">
+            Appointment List
+        </a>
+
+        <a href="{% url 'appointment_calendar' %}" class="button">
+            Appointment Calendar
+        </a>
+
+        <a href="{% url 'patient_list' %}" class="button">
+            Patient List
+        </a>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Availability</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in availability %}
+
+                    <tr>
+
+                        <td>
+                            {% if item.doctor.get_full_name %}
+                                {{ item.doctor.get_full_name }}
+                            {% else %}
+                                {{ item.doctor.username }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ item.day }}
+                        </td>
+
+                        <td>
+                            {{ item.start_time|time:"H:i" }}
+                        </td>
+
+                        <td>
+                            {{ item.end_time|time:"H:i" }}
+                        </td>
+
+                        <td>
+
+                            {% if item.is_available %}
+
+                                <span class="available">
+                                    Available
+                                </span>
+
+                            {% else %}
+
+                                <span class="unavailable">
+                                    Unavailable
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="empty">
+                            No doctor availability has been recorded yet.
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicine Inventory Report | Eden Clinic and Pharmacy</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: auto;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* HEADER */
+        .header {
+            background-color: #0077b6;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header h2 {
+            margin: 8px 0;
+            font-size: 21px;
+        }
+
+        .header p {
+            margin: 5px 0;
+            color: #d9f3ff;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 30px;
+        }
+
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e3f2fd;
+            border-left: 5px solid #0077b6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .report-title {
+            color: #005f73;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .report-date {
+            color: #555;
+        }
+
+        /* TABLE */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #023e8a;
+            color: white;
+            padding: 13px 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f5faff;
+        }
+
+        tbody tr:hover {
+            background-color: #dff6ff;
+        }
+
+        /* TABLE TEXT */
+        .medicine-name {
+            color: #0077b6;
+            font-weight: bold;
+        }
+
+        .batch-number {
+            color: #6f42c1;
+            font-weight: bold;
+        }
+
+        .quantity-received {
+            color: #198754;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .quantity-available {
+            color: #0d6efd;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .expiry-date {
+            color: #dc3545;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .purchase-price {
+            color: #6c757d;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .selling-price {
+            color: #198754;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .supplier {
+            color: #495057;
+        }
+
+        /* STOCK STATUS */
+        .stock-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .in-stock {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .low-stock {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+
+        .out-of-stock {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            font-style: italic;
+        }
+
+        /* BUTTONS */
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 20px;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+        .back-button:hover {
+            background-color: #495057;
+        }
+
+        .print-button {
+            background-color: #28a745;
+        }
+
+        .print-button:hover {
+            background-color: #218838;
+        }
+
+        /* FOOTER */
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+        }
+
+        .footer span {
+            color: #80bdff;
+            font-weight: bold;
+        }
+
+        /* RESPONSIVE */
+        @media screen and (max-width: 900px) {
+
+            .content {
+                padding: 15px;
+            }
+
+            .report-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header h2 {
+                font-size: 18px;
+            }
+        }
+
+        /* PRINT */
+        @media print {
+
+            body {
+                background-color: white;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .buttons {
+                display: none;
+            }
+
+            .footer {
+                display: none;
+            }
+
+            .header {
+                background-color: #0077b6 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            th {
+                background-color: #023e8a !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <h1>Eden Clinic and Pharmacy</h1>
+
+        <h2>Medicine Inventory Report</h2>
+
+        <p>Clinic Management System</p>
+
+    </div>
+
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <div class="report-info">
+
+            <div class="report-title">
+                Medicine Inventory Records
+            </div>
+
+            <div class="report-date">
+
+                <strong>Date:</strong>
+
+                {% now "d/m/Y" %}
+
+            </div>
+
+        </div>
+
+
+        <!-- INVENTORY TABLE -->
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>No.</th>
+
+                        <th>Medicine</th>
+
+                        <th>Batch Number</th>
+
+                        <th>Quantity Received</th>
+
+                        <th>Quantity Available</th>
+
+                        <th>Expiry Date</th>
+
+                        <th>Purchase Price</th>
+
+                        <th>Selling Price</th>
+
+                        <th>Supplier</th>
+
+                        <th>Stock Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for inventory in inventory_records %}
+
+                    <tr>
+
+                        <!-- NUMBER -->
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+
+                        <!-- MEDICINE -->
+                        <td class="medicine-name">
+
+                            {{ inventory.medicine.name }}
+
+                        </td>
+
+
+                        <!-- BATCH NUMBER -->
+                        <td class="batch-number">
+
+                            {{ inventory.batch_number }}
+
+                        </td>
+
+
+                        <!-- QUANTITY RECEIVED -->
+                        <td class="quantity-received">
+
+                            {{ inventory.quantity_received }}
+
+                        </td>
+
+
+                        <!-- QUANTITY AVAILABLE -->
+                        <td class="quantity-available">
+
+                            {{ inventory.quantity_available }}
+
+                        </td>
+
+
+                        <!-- EXPIRY DATE -->
+                        <td class="expiry-date">
+
+                            {{ inventory.expiry_date|date:"d/m/Y" }}
+
+                        </td>
+
+
+                        <!-- PURCHASE PRICE -->
+                        <td class="purchase-price">
+
+                            {{ inventory.purchase_price|floatformat:2 }}
+
+                        </td>
+
+
+                        <!-- SELLING PRICE -->
+                        <td class="selling-price">
+
+                            {{ inventory.selling_price|floatformat:2 }}
+
+                        </td>
+
+
+                        <!-- SUPPLIER -->
+                        <td class="supplier">
+
+                            {% if inventory.supplier %}
+
+                                {{ inventory.supplier }}
+
+                            {% else %}
+
+                                Not Provided
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- STOCK STATUS -->
+                        <td>
+
+                            {% if inventory.quantity_available == 0 %}
+
+                                <span class="stock-status out-of-stock">
+                                    Out of Stock
+                                </span>
+
+                            {% elif inventory.quantity_available <= 10 %}
+
+                                <span class="stock-status low-stock">
+                                    Low Stock
+                                </span>
+
+                            {% else %}
+
+                                <span class="stock-status in-stock">
+                                    In Stock
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="10" class="no-data">
+
+                            No medicine inventory records found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div class="buttons">
+
+            <a
+                href="/patients/"
+                class="button back-button"
+            >
+                ← Back to Patients
+            </a>
+
+
+            <button
+                type="button"
+                onclick="window.print()"
+                class="button print-button"
+            >
+                🖨 Print Report
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="footer">
+
+        Eden Clinic and Pharmacy |
+
+        <span>Clinic Management System</span>
+
+    </div>
+
+</div>
+
+</body>
+</html>

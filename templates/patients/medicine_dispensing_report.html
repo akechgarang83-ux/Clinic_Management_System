@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicine Dispensing Report | Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .header {
+            background-color: #0077b6;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .actions h2 {
+            margin: 0;
+            color: #023e8a;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+        .print-button {
+            background-color: #28a745;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+        th {
+            background-color: #023e8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 11px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background-color: #f1f8fb;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            font-size: 16px;
+        }
+
+        .quantity {
+            font-weight: bold;
+            color: #0077b6;
+        }
+
+        .notes {
+            max-width: 220px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .actions {
+                display: none;
+            }
+
+            .card {
+                box-shadow: none;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+                margin: 0;
+            }
+
+            .header {
+                background-color: white;
+                color: black;
+                border-bottom: 2px solid #000;
+            }
+
+            .footer {
+                display: none;
+            }
+
+            table {
+                min-width: 100%;
+            }
+
+            th {
+                background-color: #ddd !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Medicine Dispensing Report</h1>
+        <p>Clinic Management System</p>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+
+            <div class="actions">
+                <h2>Medicine Dispensing Records</h2>
+
+                <div>
+                    <a href="/patients/" class="button back-button">
+                        ← Back
+                    </a>
+
+                    <button onclick="window.print()" class="button print-button">
+                        🖨 Print Report
+                    </button>
+                </div>
+            </div>
+
+            {% if dispensings %}
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Dispensing Date</th>
+                                <th>Patient</th>
+                                <th>Patient Number</th>
+                                <th>Medicine</th>
+                                <th>Batch Number</th>
+                                <th>Quantity</th>
+                                <th>Prescription</th>
+                                <th>Dispensed By</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for dispensing in dispensings %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+
+                                    <td>
+                                        {{ dispensing.dispensing_date|date:"d M Y, h:i A" }}
+                                    </td>
+
+                                    <td>
+                                        {{ dispensing.patient.first_name }}
+                                        {{ dispensing.patient.last_name }}
+                                    </td>
+
+                                    <td>
+                                        {{ dispensing.patient.patient_number }}
+                                    </td>
+
+                                    <td>
+                                        {{ dispensing.inventory.medicine.name }}
+                                    </td>
+
+                                    <td>
+                                        {{ dispensing.inventory.batch_number }}
+                                    </td>
+
+                                    <td class="quantity">
+                                        {{ dispensing.quantity_dispensed }}
+                                    </td>
+
+                                    <td>
+                                        {% if dispensing.prescription %}
+                                            {{ dispensing.prescription.medicine_name }}
+                                            <br>
+
+                                            <small>
+                                                {{ dispensing.prescription.dosage }}
+                                                -
+                                                {{ dispensing.prescription.frequency }}
+                                            </small>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if dispensing.dispensed_by %}
+                                            {{ dispensing.dispensed_by.get_full_name|default:dispensing.dispensed_by.username }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="notes">
+                                        {% if dispensing.notes %}
+                                            {{ dispensing.notes }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-message">
+                    No medicine dispensing records found.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Clinic Management System &copy; 2026
+    </div>
+
+</body>
+</html>

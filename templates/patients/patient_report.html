@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Report</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .header {
+            text-align: center;
+            background-color: #0077b6;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header h2 {
+            margin: 8px 0;
+            font-size: 21px;
+        }
+
+        .header p {
+            margin: 5px 0;
+            color: #d9f3ff;
+        }
+
+        .report-date {
+            text-align: right;
+            background-color: #e3f2fd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: #005f73;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background-color: #023e8a;
+            color: white;
+            padding: 13px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 11px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f1f8ff;
+        }
+
+        table tr:hover {
+            background-color: #dff6ff;
+        }
+
+        table td:nth-child(2) {
+            color: #0077b6;
+            font-weight: bold;
+        }
+
+        table td:nth-child(3) {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .active {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 20px;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+        .back-button:hover {
+            background-color: #495057;
+        }
+
+        .print-button {
+            background-color: #28a745;
+        }
+
+        .print-button:hover {
+            background-color: #218838;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        @media print {
+
+            .buttons {
+                display: none;
+            }
+
+            body {
+                background-color: white;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .header {
+                background-color: #0077b6 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            table th {
+                background-color: #023e8a !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>
+            Eden Clinic and Pharmacy
+        </h1>
+
+        <h2>
+            Patient Management Report
+        </h2>
+
+        <p>
+            Clinic Management System
+        </p>
+
+    </div>
+
+
+    <div class="report-date">
+
+        <strong>Date:</strong>
+
+        {% now "d/m/Y" %}
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>No.</th>
+
+                <th>Patient Number</th>
+
+                <th>Full Name</th>
+
+                <th>Date of Birth</th>
+
+                <th>Gender</th>
+
+                <th>Phone</th>
+
+                <th>Status</th>
+
+                <th>Registration Date</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for patient in patients %}
+
+            <tr>
+
+                <td>
+                    {{ forloop.counter }}
+                </td>
+
+                <td>
+                    {{ patient.patient_number }}
+                </td>
+
+                <td>
+                    {{ patient.first_name }}
+                    {{ patient.last_name }}
+                </td>
+
+                <td>
+                    {{ patient.date_of_birth|date:"d/m/Y" }}
+                </td>
+
+                <td>
+                    {{ patient.gender }}
+                </td>
+
+                <td>
+                    {{ patient.phone }}
+                </td>
+
+                <td>
+
+                    {% if patient.status == "Active" %}
+
+                        <span class="active">
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="inactive">
+                            Inactive
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ patient.registration_date|date:"d/m/Y" }}
+                </td>
+
+            </tr>
+
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="8" class="no-data">
+
+                    No patients found.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    <div class="buttons">
+
+        <a
+            href="/patients/"
+            class="button back-button">
+
+            ← Back to Patients
+
+        </a>
+
+
+        <button
+            type="button"
+            onclick="window.print()"
+            class="button print-button">
+
+            🖨 Print Report
+
+        </button>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

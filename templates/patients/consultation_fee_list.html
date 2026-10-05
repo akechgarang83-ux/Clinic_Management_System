@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Consultation Fees | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+        }
+
+        .header p {
+            margin: 0;
+        }
+
+        .actions {
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 8px;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .filter-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-box form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-box input {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .filter-box button {
+            padding: 10px 18px;
+            border: none;
+            background-color: #27ae60;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-box button:hover {
+            background-color: #219150;
+        }
+
+        .clear-button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #95a5a6;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #34495e;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .patient-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .fee {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .small-text {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .empty {
+            padding: 30px;
+            text-align: center;
+            color: #777;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Consultation Fees</h1>
+
+        <p>
+            Manage consultation fees charged to patients.
+        </p>
+
+    </div>
+
+
+    <div class="actions">
+
+        <a
+            href="{% url 'add_consultation_fee' %}"
+            class="button"
+        >
+            + Add Consultation Fee
+        </a>
+
+        <a
+            href="{% url 'invoice_list' %}"
+            class="button"
+        >
+            Invoice Management
+        </a>
+
+    </div>
+
+
+    <div class="filter-box">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search patient, patient number or description..."
+                value="{{ search }}"
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+            <a
+                href="{% url 'consultation_fee_list' %}"
+                class="clear-button"
+            >
+                Clear
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <div class="table-container">
+
+        {% if fees %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Date</th>
+
+                    <th>Patient</th>
+
+                    <th>Consultation</th>
+
+                    <th>Fee Amount</th>
+
+                    <th>Description</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for fee in fees %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+
+                    <td>
+                        {{ fee.fee_date }}
+                    </td>
+
+
+                    <td>
+
+                        <span class="patient-name">
+
+                            {{ fee.patient.first_name }}
+                            {{ fee.patient.last_name }}
+
+                        </span>
+
+                        <br>
+
+                        <span class="small-text">
+
+                            Patient No:
+                            {{ fee.patient.patient_number }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if fee.consultation %}
+
+                            {{ fee.consultation.chief_complaint }}
+
+                            <br>
+
+                            <span class="small-text">
+
+                                Consultation Date:
+                                {{ fee.consultation.consultation_date }}
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="small-text">
+                                Not linked to a consultation
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="fee">
+
+                            {{ fee.fee_amount|floatformat:2 }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if fee.description %}
+
+                            {{ fee.description }}
+
+                        {% else %}
+
+                            <span class="small-text">
+                                No description
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty">
+
+            <h3>
+                No consultation fees found
+            </h3>
+
+            <p>
+                There are currently no consultation fee records.
+            </p>
+
+            <a
+                href="{% url 'add_consultation_fee' %}"
+                class="button"
+            >
+                Add First Consultation Fee
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

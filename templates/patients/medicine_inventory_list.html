@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicine Inventory | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1300px;
+            margin: 40px auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+
+        .add-button {
+            background-color: #198754;
+            color: white;
+            padding: 12px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .add-button:hover {
+            background-color: #146c43;
+        }
+
+        .search-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-box form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-button {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .clear-button {
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #212529;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .quantity {
+            font-weight: bold;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Medicine Inventory</h1>
+
+        <a
+            href="{% url 'add_medicine_inventory' %}"
+            class="add-button"
+        >
+            + Add Inventory
+        </a>
+
+    </div>
+
+
+    <div class="search-box">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search medicine, batch number or supplier..."
+                value="{{ search }}"
+            >
+
+            <button
+                type="submit"
+                class="search-button"
+            >
+                Search
+            </button>
+
+            <a
+                href="{% url 'medicine_inventory_list' %}"
+                class="clear-button"
+            >
+                Clear
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Medicine</th>
+
+                    <th>Batch Number</th>
+
+                    <th>Quantity Received</th>
+
+                    <th>Quantity Available</th>
+
+                    <th>Expiry Date</th>
+
+                    <th>Purchase Price</th>
+
+                    <th>Selling Price</th>
+
+                    <th>Supplier</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in inventory %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        <strong>{{ item.medicine.name }}</strong>
+                    </td>
+
+                    <td>
+                        {{ item.batch_number }}
+                    </td>
+
+                    <td>
+                        {{ item.quantity_received }}
+                    </td>
+
+                    <td class="quantity">
+                        {{ item.quantity_available }}
+                    </td>
+
+                    <td>
+                        {{ item.expiry_date|date:"d M Y" }}
+                    </td>
+
+                    <td>
+                        {{ item.purchase_price }}
+                    </td>
+
+                    <td>
+                        {{ item.selling_price }}
+                    </td>
+
+                    <td>
+                        {{ item.supplier|default:"-" }}
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="empty-message"
+                    >
+                        No inventory records found.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <a
+        href="{% url 'medicine_list' %}"
+        class="back-link"
+    >
+        ← Back to Medicine List
+    </a>
+
+</div>
+
+</body>
+
+</html>

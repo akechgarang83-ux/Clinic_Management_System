@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Payment Records | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #333333;
+        }
+
+        .header p {
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .search-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .search-box form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eeeeee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            color: #333333;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .amount {
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #777777;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <div class="header">
+
+        <h1>
+            Payment Records
+        </h1>
+
+        <p>
+            View and manage all payments made by patients.
+        </p>
+
+
+        <div class="actions">
+
+            <a href="{% url 'add_payment_record' %}"
+            class="btn btn-primary">
+
+                + Add Payment Record
+
+            </a>
+
+
+            <a href="{% url 'invoice_list' %}"
+            class="btn btn-secondary">
+
+                Invoice Management
+
+            </a>
+
+
+            <a href="{% url 'medicine_charge_list' %}"
+            class="btn btn-secondary">
+
+                Medicine Charges
+
+            </a>
+
+
+            <a href="{% url 'patient_management' %}"
+            class="btn btn-secondary">
+
+                Patient Management
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="search-box">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search by patient, patient number, invoice number, or reference..."
+            >
+
+            <button type="submit">
+
+                Search
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+    <div class="table-container">
+
+
+        {% if payments %}
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Patient</th>
+
+                    <th>Patient Number</th>
+
+                    <th>Invoice</th>
+
+                    <th>Amount Paid</th>
+
+                    <th>Payment Method</th>
+
+                    <th>Payment Date</th>
+
+                    <th>Reference Number</th>
+
+                    <th>Notes</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for payment in payments %}
+
+
+                <tr>
+
+
+                    <td>
+
+                        {{ forloop.counter }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.patient.first_name }}
+
+                        {{ payment.patient.last_name }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.patient.patient_number }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.invoice.invoice_number }}
+
+                    </td>
+
+
+                    <td class="amount">
+
+                        {{ payment.amount_paid|floatformat:2 }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.payment_method }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.payment_date|date:"Y-m-d H:i" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.reference_number|default:"-" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ payment.notes|default:"-" }}
+
+                    </td>
+                    <td>
+    <a
+    href="{% url 'payment_receipt' payment.id %}"
+    style="
+        background-color: #007bff;
+        color: white;
+        padding: 6px 10px;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-right: 5px;
+    "
+>
+    Receipt
+</a>                    
+
+    <a
+        href="{% url 'delete_payment_record' payment.id %}"
+        style="
+            background-color: #dc3545;
+            color: white;
+            padding: 7px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+        "
+    >
+        Delete
+    </a>
+
+</td>
+
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+
+        {% else %}
+
+
+        <div class="empty">
+
+            <h3>
+                No payment records found
+            </h3>
+
+            <p>
+                No payments have been recorded yet.
+            </p>
+
+
+            <a href="{% url 'add_payment_record' %}"
+            class="btn btn-primary">
+
+                Add Payment Record
+
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

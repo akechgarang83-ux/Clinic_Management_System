@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Add Payment Record | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .description {
+            color: #666666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .invoice-info {
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .invoice-info p {
+            margin: 7px 0;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button,
+        .btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            Add Payment Record
+        </h1>
+
+        <p class="description">
+            Record a payment made by a patient against an invoice.
+        </p>
+
+
+        {% if error %}
+
+        <div class="error">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="invoice">
+                    Invoice
+                </label>
+
+                <select
+                    name="invoice"
+                    id="invoice"
+                    required
+                >
+
+                    <option value="">
+                        -- Select Invoice --
+                    </option>
+
+
+                    {% for invoice in invoices %}
+
+                    <option
+                        value="{{ invoice.id }}"
+                        data-total="{{ invoice.total_amount }}"
+                        data-paid="{{ invoice.amount_paid }}"
+                        data-balance="{{ invoice.balance }}"
+                    >
+
+                        {{ invoice.invoice_number }}
+                        -
+                        {{ invoice.patient.first_name }}
+                        {{ invoice.patient.last_name }}
+                        -
+                        Balance:
+                        {{ invoice.balance|floatformat:2 }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div
+                id="invoice-info"
+                class="invoice-info"
+                style="display: none;"
+            >
+
+                <p>
+                    <strong>
+                        Invoice Total:
+                    </strong>
+
+                    <span id="invoice-total">
+                        0.00
+                    </span>
+                </p>
+
+
+                <p>
+                    <strong>
+                        Already Paid:
+                    </strong>
+
+                    <span id="invoice-paid">
+                        0.00
+                    </span>
+                </p>
+
+
+                <p>
+                    <strong>
+                        Outstanding Balance:
+                    </strong>
+
+                    <span id="invoice-balance">
+                        0.00
+                    </span>
+                </p>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="amount_paid">
+                    Amount Paid
+                </label>
+
+                <input
+                    type="number"
+                    name="amount_paid"
+                    id="amount_paid"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Enter amount paid"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="payment_method">
+                    Payment Method
+                </label>
+
+                <select
+                    name="payment_method"
+                    id="payment_method"
+                    required
+                >
+
+                    <option value="Cash">
+                        Cash
+                    </option>
+
+                    <option value="Mobile Money">
+                        Mobile Money
+                    </option>
+
+                    <option value="Bank Transfer">
+                        Bank Transfer
+                    </option>
+
+                    <option value="Card">
+                        Card
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="reference_number">
+                    Reference Number
+                </label>
+
+                <input
+                    type="text"
+                    name="reference_number"
+                    id="reference_number"
+                    placeholder="Optional payment reference"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="notes">
+                    Notes
+                </label>
+
+                <textarea
+                    name="notes"
+                    id="notes"
+                    placeholder="Enter any additional payment information..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button type="submit">
+                    Save Payment Record
+                </button>
+
+
+                <a
+                    href="{% url 'payment_record_list' %}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const invoiceSelect =
+        document.getElementById('invoice');
+
+    const invoiceInfo =
+        document.getElementById('invoice-info');
+
+    const invoiceTotal =
+        document.getElementById('invoice-total');
+
+    const invoicePaid =
+        document.getElementById('invoice-paid');
+
+    const invoiceBalance =
+        document.getElementById('invoice-balance');
+
+
+    invoiceSelect.addEventListener(
+        'change',
+        function () {
+
+            const selectedOption =
+                this.options[this.selectedIndex];
+
+
+            if (!selectedOption.value) {
+
+                invoiceInfo.style.display =
+                    'none';
+
+                return;
+            }
+
+
+            const total =
+                parseFloat(
+                    selectedOption.dataset.total
+                ) || 0;
+
+
+            const paid =
+                parseFloat(
+                    selectedOption.dataset.paid
+                ) || 0;
+
+
+            const balance =
+                parseFloat(
+                    selectedOption.dataset.balance
+                ) || 0;
+
+
+            invoiceTotal.textContent =
+                total.toFixed(2);
+
+
+            invoicePaid.textContent =
+                paid.toFixed(2);
+
+
+            invoiceBalance.textContent =
+                balance.toFixed(2);
+
+
+            invoiceInfo.style.display =
+                'block';
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

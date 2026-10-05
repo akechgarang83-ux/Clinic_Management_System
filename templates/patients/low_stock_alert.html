@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Low Stock Alert | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #333333;
+        }
+
+        .description {
+            color: #666666;
+            margin: 0;
+        }
+
+        .actions {
+            margin-top: 15px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 8px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .alert-summary {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-box form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .search-button {
+            padding: 10px 18px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eeeeee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333333;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .low-stock {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .normal-stock {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: #28a745;
+            padding: 30px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Low Stock Alert</h1>
+
+        <p class="description">
+            Medicines with available stock of 10 units or less
+            are displayed here.
+        </p>
+
+        <div class="actions">
+
+            <a
+                href="{% url 'medicine_inventory_list' %}"
+                class="button"
+            >
+                Medicine Inventory
+            </a>
+
+            <a
+                href="{% url 'medicine_list' %}"
+                class="button"
+            >
+                Medicine Management
+            </a>
+
+            <a
+                href="{% url 'add_medicine_inventory' %}"
+                class="button"
+            >
+                + Add Inventory
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="alert-summary">
+
+        <strong>
+            Low-stock items:
+        </strong>
+
+        {{ low_stock_items|length }}
+
+    </div>
+
+
+    <div class="search-box">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search medicine or batch number"
+                value="{{ search }}"
+            >
+
+            <button
+                type="submit"
+                class="search-button"
+            >
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Medicine</th>
+                    <th>Generic Name</th>
+                    <th>Batch Number</th>
+                    <th>Available Stock</th>
+                    <th>Expiry Date</th>
+                    <th>Supplier</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in low_stock_items %}
+
+                <tr>
+
+                    <td>
+                        {{ item.medicine.name }}
+                    </td>
+
+                    <td>
+                        {{ item.medicine.generic_name|default:"-" }}
+                    </td>
+
+                    <td>
+                        {{ item.batch_number }}
+                    </td>
+
+                    <td class="low-stock">
+                        {{ item.quantity_available }}
+                    </td>
+
+                    <td>
+                        {{ item.expiry_date|date:"Y-m-d" }}
+                    </td>
+
+                    <td>
+                        {{ item.supplier|default:"-" }}
+                    </td>
+
+                    <td class="low-stock">
+                        LOW STOCK
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="empty"
+                    >
+                        ✓ No low-stock medicines found.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

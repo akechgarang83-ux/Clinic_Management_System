@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicine List | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+
+        .add-button {
+            background-color: #198754;
+            color: white;
+            padding: 12px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .add-button:hover {
+            background-color: #146c43;
+        }
+
+        .search-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-box form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input,
+        .search-box select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-button {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #0b5ed7;
+        }
+
+        .clear-button {
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow-x: auto;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #212529;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status-active {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Medicine List</h1>
+
+        <a href="{% url 'add_medicine' %}" class="add-button">
+            + Add Medicine
+        </a>
+
+    </div>
+
+
+    <div class="search-box">
+
+        <form method="GET">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search by medicine name, generic name or manufacturer..."
+                value="{{ search }}"
+            >
+
+            <select name="status">
+
+                <option value="">All Statuses</option>
+
+                <option
+                    value="Active"
+                    {% if selected_status == 'Active' %}selected{% endif %}
+                >
+                    Active
+                </option>
+
+                <option
+                    value="Inactive"
+                    {% if selected_status == 'Inactive' %}selected{% endif %}
+                >
+                    Inactive
+                </option>
+
+            </select>
+
+            <button type="submit" class="search-button">
+                Search
+            </button>
+
+            <a href="{% url 'medicine_list' %}" class="clear-button">
+                Clear
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Medicine Name</th>
+
+                    <th>Generic Name</th>
+
+                    <th>Dosage Form</th>
+
+                    <th>Strength</th>
+
+                    <th>Manufacturer</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for medicine in medicines %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        <strong>{{ medicine.name }}</strong>
+                    </td>
+
+                    <td>
+                        {{ medicine.generic_name|default:"-" }}
+                    </td>
+
+                    <td>
+                        {{ medicine.dosage_form|default:"-" }}
+                    </td>
+
+                    <td>
+                        {{ medicine.strength|default:"-" }}
+                    </td>
+
+                    <td>
+                        {{ medicine.manufacturer|default:"-" }}
+                    </td>
+
+                    <td>
+
+                        {% if medicine.status == 'Active' %}
+
+                            <span class="status-active">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-inactive">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="7" class="empty-message">
+
+                        No medicines found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <a href="{% url 'patient_list' %}" class="back-link">
+        ← Back to Patient Management
+    </a>
+
+</div>
+
+</body>
+
+</html>

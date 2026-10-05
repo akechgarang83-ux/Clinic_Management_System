@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Laboratory Report | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 98%;
+            max-width: 1600px;
+            margin: 30px auto;
+        }
+
+        .header {
+            background-color: #0077b6;
+            color: white;
+            padding: 25px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+        .report-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+        }
+
+        .print-button {
+            background-color: #28a745;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1500px;
+        }
+
+        th {
+            background-color: #023e8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background-color: #eaf6ff;
+        }
+
+        .patient-name {
+            font-weight: bold;
+            color: #0077b6;
+        }
+
+        .test-name {
+            font-weight: bold;
+            color: #023e8a;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .requested {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .sample-collected {
+            background-color: #cff4fc;
+            color: #055160;
+        }
+
+        .processing {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+
+        .completed {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .verified {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .cancelled {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+        .rejected {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+        .result {
+            font-weight: bold;
+            color: #198754;
+        }
+
+        .no-result {
+            color: #777;
+            font-style: italic;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            font-size: 16px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #555;
+            font-size: 13px;
+        }
+
+        @media print {
+
+            body {
+                background-color: white;
+            }
+
+            .container {
+                width: 100%;
+                margin: 0;
+            }
+
+            .header {
+                border-radius: 0;
+            }
+
+            .report-card {
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .buttons {
+                display: none;
+            }
+
+            table {
+                min-width: 100%;
+            }
+
+            th,
+            td {
+                font-size: 9px;
+                padding: 5px;
+            }
+
+            .footer {
+                margin-top: 20px;
+            }
+
+        }
+
+        @media (max-width: 768px) {
+
+            .container {
+                width: 98%;
+                margin: 10px auto;
+            }
+
+            .header {
+                padding: 18px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .report-card {
+                padding: 15px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>
+                Laboratory Report
+            </h1>
+
+            <p>
+                Eden Clinic and Pharmacy
+            </p>
+
+        </div>
+
+        <div class="report-card">
+
+            <div class="buttons">
+
+                <a
+                    href="/patients/reports/payments/"
+                    class="button back-button"
+                >
+                    ← Payment Report
+                </a>
+
+                <button
+                    onclick="window.print()"
+                    class="button print-button"
+                >
+                    🖨 Print Report
+                </button>
+
+            </div>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Request Date
+                            </th>
+
+                            <th>
+                                Patient
+                            </th>
+
+                            <th>
+                                Patient Number
+                            </th>
+
+                            <th>
+                                Test Category
+                            </th>
+
+                            <th>
+                                Test Name
+                            </th>
+
+                            <th>
+                                Clinical Notes
+                            </th>
+
+                            <th>
+                                Sample Type
+                            </th>
+
+                            <th>
+                                Processing
+                            </th>
+
+                            <th>
+                                Result
+                            </th>
+
+                            <th>
+                                Reference Range
+                            </th>
+
+                            <th>
+                                Unit
+                            </th>
+
+                            <th>
+                                Result Notes
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Verification
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for lab_test in lab_tests %}
+
+                        <tr>
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+                            <td>
+                                {{ lab_test.request_date|date:"d M Y, h:i A" }}
+                            </td>
+
+                            <td class="patient-name">
+
+                                {{ lab_test.patient.first_name }}
+                                {{ lab_test.patient.last_name }}
+
+                            </td>
+
+                            <td>
+                                {{ lab_test.patient.patient_number }}
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.test_category %}
+
+                                    {{ lab_test.test_category.name }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="test-name">
+                                {{ lab_test.test_name }}
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.clinical_notes %}
+
+                                    {{ lab_test.clinical_notes }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.sample_collection %}
+
+                                    {{ lab_test.sample_collection.sample_type }}
+
+                                {% else %}
+
+                                    <span class="no-result">
+                                        Not collected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.test_processing %}
+
+                                    {{ lab_test.test_processing.processing_date|date:"d M Y, h:i A" }}
+
+                                {% else %}
+
+                                    <span class="no-result">
+                                        Not processed
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="result">
+
+                                {% if lab_test.test_result %}
+
+                                    {{ lab_test.test_result.result_value }}
+
+                                {% else %}
+
+                                    <span class="no-result">
+                                        No result
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.test_result %}
+
+                                    {{ lab_test.test_result.reference_range|default:"-" }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.test_result %}
+
+                                    {{ lab_test.test_result.unit|default:"-" }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.test_result %}
+
+                                    {{ lab_test.test_result.result_notes|default:"-" }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.status == "Requested" %}
+
+                                    <span class="status requested">
+                                        Requested
+                                    </span>
+
+                                {% elif lab_test.status == "Sample Collected" %}
+
+                                    <span class="status sample-collected">
+                                        Sample Collected
+                                    </span>
+
+                                {% elif lab_test.status == "Processing" %}
+
+                                    <span class="status processing">
+                                        Processing
+                                    </span>
+
+                                {% elif lab_test.status == "Completed" %}
+
+                                    <span class="status completed">
+                                        Completed
+                                    </span>
+
+                                {% elif lab_test.status == "Verified" %}
+
+                                    <span class="status verified">
+                                        Verified
+                                    </span>
+
+                                {% elif lab_test.status == "Cancelled" %}
+
+                                    <span class="status cancelled">
+                                        Cancelled
+                                    </span>
+
+                                {% else %}
+
+                                    {{ lab_test.status }}
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if lab_test.test_result %}
+
+                                    {% if lab_test.test_result.verification %}
+
+                                        {% if lab_test.test_result.verification.verification_status == "Verified" %}
+
+                                            <span class="status verified">
+                                                Verified
+                                            </span>
+
+                                        {% elif lab_test.test_result.verification.verification_status == "Rejected" %}
+
+                                            <span class="status rejected">
+                                                Rejected
+                                            </span>
+
+                                        {% else %}
+
+                                            {{ lab_test.test_result.verification.verification_status }}
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        <span class="no-result">
+                                            Not verified
+                                        </span>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="no-result">
+                                        -
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="15"
+                                class="no-records"
+                            >
+                                No laboratory test records found.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="footer">
+
+                <p>
+                    Eden Clinic and Pharmacy |
+                    Laboratory Report
+                </p>
+
+                <p>
+                    Generated by Clinic Management System
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

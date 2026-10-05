@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Reschedule Appointment | Clinic Management System</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 700px;
+            max-width: 92%;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .appointment-info {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .current-status {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button,
+        a {
+            padding: 11px 22px;
+            border-radius: 5px;
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .cancel-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background-color: #545b62;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Reschedule Appointment
+        </h1>
+
+
+        <div class="appointment-info">
+
+            <strong>
+                Patient:
+            </strong>
+
+            {{ appointment.patient.first_name }}
+            {{ appointment.patient.last_name }}
+
+            <br>
+
+            <strong>
+                Patient Number:
+            </strong>
+
+            {{ appointment.patient.patient_number }}
+
+            <br>
+
+            <strong>
+                Current Appointment:
+            </strong>
+
+            {{ appointment.appointment_date|date:"M d, Y" }}
+
+            at
+
+            {{ appointment.appointment_time|time:"g:i A" }}
+
+        </div>
+
+
+        <div class="current-status">
+
+            Current Status:
+            {{ appointment.status }}
+
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label for="doctor">
+                    Doctor
+                </label>
+
+                <select
+                    id="doctor"
+                    name="doctor"
+                >
+
+                    <option value="">
+                        -- Select Doctor --
+                    </option>
+
+                    {% for doctor in doctors %}
+
+                        <option
+                            value="{{ doctor.id }}"
+                            {% if appointment.doctor and appointment.doctor.id == doctor.id %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {% if doctor.get_full_name %}
+
+                                {{ doctor.get_full_name }}
+
+                            {% else %}
+
+                                {{ doctor.username }}
+
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="appointment_date">
+                    New Appointment Date
+                </label>
+
+                <input
+                    type="date"
+                    id="appointment_date"
+                    name="appointment_date"
+                    value="{{ appointment.appointment_date|date:'Y-m-d' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="appointment_time">
+                    New Appointment Time
+                </label>
+
+                <input
+                    type="time"
+                    id="appointment_time"
+                    name="appointment_time"
+                    value="{{ appointment.appointment_time|time:'H:i' }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="reason">
+                    Reason for Visit
+                </label>
+
+                <textarea
+                    id="reason"
+                    name="reason"
+                    placeholder="Enter the reason for the appointment..."
+                >{{ appointment.reason }}</textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="notes">
+                    Additional Notes
+                </label>
+
+                <textarea
+                    id="notes"
+                    name="notes"
+                    placeholder="Enter any additional notes..."
+                >{{ appointment.notes }}</textarea>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    Save Rescheduled Appointment
+                </button>
+
+
+                <a
+                    href="{% url 'patient_detail' appointment.patient.id %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

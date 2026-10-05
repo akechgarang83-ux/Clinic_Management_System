@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Add Medicine | Clinic Management System
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .help-text {
+            color: #777;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .button-group {
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-button {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .save-button:hover {
+            background-color: #219150;
+        }
+
+        .cancel-button {
+            background-color: #7f8c8d;
+            color: white;
+        }
+
+        .cancel-button:hover {
+            background-color: #6c7778;
+        }
+
+        @media (max-width: 600px) {
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .button {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Add Medicine
+    </h1>
+
+    <p class="subtitle">
+        Clinic Management System — Pharmacy & Prescription Management
+    </p>
+
+
+    <div class="form-container">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- BASIC INFORMATION -->
+
+            <h2 class="section-title">
+                Medicine Information
+            </h2>
+
+
+            <!-- MEDICINE NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+
+                    Medicine Name
+                    <span class="required">*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter medicine name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- GENERIC NAME -->
+
+            <div class="form-group">
+
+                <label for="generic_name">
+                    Generic Name
+                </label>
+
+                <input
+                    type="text"
+                    id="generic_name"
+                    name="generic_name"
+                    placeholder="Enter generic name"
+                >
+
+            </div>
+
+
+            <!-- DOSAGE FORM -->
+
+            <div class="form-group">
+
+                <label for="dosage_form">
+                    Dosage Form
+                </label>
+
+                <select
+                    id="dosage_form"
+                    name="dosage_form"
+                >
+
+                    <option value="">
+                        Select dosage form
+                    </option>
+
+                    <option value="Tablet">
+                        Tablet
+                    </option>
+
+                    <option value="Capsule">
+                        Capsule
+                    </option>
+
+                    <option value="Syrup">
+                        Syrup
+                    </option>
+
+                    <option value="Injection">
+                        Injection
+                    </option>
+
+                    <option value="Cream">
+                        Cream
+                    </option>
+
+                    <option value="Ointment">
+                        Ointment
+                    </option>
+
+                    <option value="Drops">
+                        Drops
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- STRENGTH -->
+
+            <div class="form-group">
+
+                <label for="strength">
+                    Strength
+                </label>
+
+                <input
+                    type="text"
+                    id="strength"
+                    name="strength"
+                    placeholder="Example: 500 mg"
+                >
+
+            </div>
+
+
+            <!-- MANUFACTURER -->
+
+            <div class="form-group">
+
+                <label for="manufacturer">
+                    Manufacturer
+                </label>
+
+                <input
+                    type="text"
+                    id="manufacturer"
+                    name="manufacturer"
+                    placeholder="Enter manufacturer"
+                >
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Enter medicine description..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="status">
+
+                    Status
+                    <span class="required">*</span>
+
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="button save-button"
+                >
+                    Save Medicine
+                </button>
+
+
+                <a
+                    href="{% url 'medicine_list' %}"
+                    class="button cancel-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
